@@ -7,6 +7,7 @@
   packages = [
     pkgs.zulu17
     pkgs.maven
+    pkgs.spring-boot-cli
   ];
   # Sets environment variables in the workspace
   env = { };
