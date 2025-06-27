@@ -8,13 +8,13 @@
 6. Use a lambda to filter out all empty strings from a list.
 7. Implement a lambda to check if a string is a palindrome.
 8. Create a list of employees and use lambda to filter those with salary > 50,000.
-
-//! TODO ⇩
 9. Use lambda to find the sum of squares of even numbers in a list.
 10. Use a lambda expression to convert a list of strings to uppercase.
 11. Create a lambda that takes two numbers and returns true if one is divisible by the other.
 12. Use a lambda to replace all null values in a list with a default string.
 13. Write a lambda that returns the factorial of a number.
+
+//! TODO ⇩
 14. Create a lambda expression that removes all whitespace from a string.
 15. Write a lambda to return the reverse of a string.
 16. Create a list of student objects and use a lambda to sort by name.

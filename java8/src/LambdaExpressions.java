@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -17,6 +14,7 @@ public class LambdaExpressions {
 
         String[] listOfStrings = {"", "wwe", "a", "WeW", "Madam", "  ", "Rahul", "google"};
 
+
         IO.printf(Arrays.stream(sortListViaLength.apply(listOfStrings)));
 
         IO.printf(Arrays.stream(new int[]{1, 2, 3, 4, 5, 6, 7}).mapToObj((a) -> a + "=" + primeChecker.apply(a)));
@@ -27,8 +25,40 @@ public class LambdaExpressions {
 
         IO.printf(Arrays.stream(listOfStrings).map(isPalindrome));
 
-        IO.printf(filterGreaterThan.apply(new int[]{1000,111011, 20000, 50000, 50001}));
+        IO.printf(filterGreaterThan.apply(new int[]{1000, 111011, 20000, 50000, 50001}));
 
+        IO.printf(Arrays.stream(new Integer[]{12, 45, 68, 79, 90}).map(grade));
+
+        IO.printf(Arrays.stream(new Character[]{'s', '@', 'b', '1'}).map(isAlphaNumSym));
+
+        IO.printf(Arrays.stream(new Character[]{'s', 'a', 'A', 'q'}).map(isVowel));
+
+        Arrays.stream(new Integer[]{12, 45, 68, 79, 90}).forEach(isEven);
+
+        IO.printf(sumOfSqOfEvenNumber.apply(new int[]{12, 45, 68, 79, 90}));
+        IO.nextln();
+
+        IO.printf(convertUpperCase.apply(listOfStrings));
+
+        IO.printf(isDivisible.test(12, 2));
+        IO.printf(isDivisible.test(2, 21));
+
+        IO.nextln();
+        List<Integer> ls = Arrays.asList(12, null, 45, 68, null, 79, 90);
+        IO.printf(ls);
+        setDefaultOnNull.accept(ls, 0);
+
+        Integer[] listOfInt = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+
+        IO.nextln();
+        for (int i : listOfInt)
+            IO.printf(factorial.apply(i));
+        IO.nextln();
+
+        IO.printf(binarySearch.apply(listOfInt, 1));
+        IO.printf(binarySearch.apply(listOfInt, 2));
+        IO.printf(binarySearch.apply(listOfInt, 3));
+        IO.printf(binarySearch.apply(listOfInt, 4));
     }
 
 
@@ -61,11 +91,92 @@ public class LambdaExpressions {
     //7. Implement a lambda to check if a string is a palindrome.
     static Function<String, Boolean> isPalindrome = (String str) -> {
         str = str.toLowerCase();
-       return (new StringBuffer(str)).reverse().toString().equals(str);
+        return (new StringBuffer(str)).reverse().toString().equals(str);
     };
 
     //8. Create a list of employees and use lambda to filter those with salary > max value.
-    static Function<int[],int[]> filterGreaterThan =  (ls)->
-            Arrays.stream(ls).filter(s-> s>50000).toArray();
+    static Function<int[], int[]> filterGreaterThan = (ls) ->
+            Arrays.stream(ls).filter(s -> s > 50000).toArray();
+
+    //9. WAP to decide grade of the student based on obtained marks
+    static Function<Integer, String> grade = (a) -> {
+        if (80 <= a) return "A";
+        else if (a >= 60) return "B";
+        else if (a >= 40) return "C";
+        else if (a >= 35) return "D";
+        else return "E";
+
+    };
+
+    //10. WAP to check a given char is Alphabets , number, symbols
+    static Function<Character, String> isAlphaNumSym = (ch) -> {
+        if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')
+            return "Alphabets";
+        else if (ch >= '0' && ch <= '9')
+            return "Number";
+        else
+            return "Special Char.";
+    };
+
+    //11. WAP to check is alphabet vowel or not
+    static Function<Character, String> isVowel = (ch) -> {
+        if (ch >= 'A' && ch <= 'Z') ch = (char) (ch + 32);
+        return switch (ch) {
+            case 'a', 'e', 'i', 'o', 'u' -> "Vowel";
+            default -> "Consonant";
+        };
+    };
+
+    // 12.
+    static Consumer<Integer> isEven = (a) -> {
+        switch ((a / 2) * 2 / a) {
+            case 1 -> System.out.println("Even");
+            default -> System.out.println("Odd");
+        }
+    };
+
+    //    9. Use lambda to find the sum of squares of even numbers in a list.
+    static Function<int[], Integer> sumOfSqOfEvenNumber = (ls) ->
+            Arrays.stream(ls).filter(s -> s % 2 == 0).reduce(0, (a, b) -> a + b * b);
+
+
+    //   10. Use a lambda expression to convert a list of strings to uppercase.
+    static UnaryOperator<String[]> convertUpperCase = (ls) ->
+            Arrays.stream(ls).map(String::toUpperCase).toArray(String[]::new);
+
+    //   11. Create a lambda that takes two numbers and returns true if one is divisible by the other.
+    static BiPredicate<Integer, Integer> isDivisible = (a, b) -> a % b == 0 || b % a == 0;
+
+//   12. Use a lambda to replace all null values in a list with a default string.
+
+    static BiConsumer<List<Integer>, Integer> setDefaultOnNull = (ls, def) -> {
+        for (int i = 0; i < ls.size(); i++)
+            if (ls.get(i) == null) ls.set(i, def);
+    };
+
+    //   13. Write a lambda that returns the factorial of a number.
+    static UnaryOperator<Integer> factorial = (n) ->
+            IntStream.range(1, ++n).reduce(1, (r, i) -> r * i);
+
+
+    static BiFunction<Integer[], Integer, Integer> binarySearch = (array, a) -> {
+        int start = 0;
+        int end = array.length - 1;
+        boolean isAscending = array[start] < array[end];
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (Objects.equals(a, array[mid])) return mid;
+
+            if (isAscending) {
+                if (a < array[mid]) end = mid - 1;
+                else start = mid + 1;
+            } else {
+                if (a > array[mid]) end = mid - 1;
+                else start = mid + 1;
+            }
+        }
+        return -1;
+    };
 
 }
