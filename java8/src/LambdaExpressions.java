@@ -1,7 +1,9 @@
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import utils.IO;
 
 
@@ -59,6 +61,21 @@ public class LambdaExpressions {
         IO.printf(binarySearch.apply(listOfInt, 2));
         IO.printf(binarySearch.apply(listOfInt, 3));
         IO.printf(binarySearch.apply(listOfInt, 4));
+        IO.nextln();
+        IO.printf(factors.apply(90));
+        IO.printf(factors.apply(35));
+        IO.printf(factors.apply(136));
+        String dummayStr = "Template Method is a behavioral design pattern that defines the skeleton of an algorithm in a superclass and lets subclasses override specific steps of the algorithm without changing its structure.";
+        IO.printf(removeAllWhiteSpaces.apply(dummayStr));
+        IO.nextln();
+        IO.printf(Arrays.stream(listOfInt).map(isPrime));
+
+        IO.printf(reverseString.apply("RAhul Sharma"));
+
+        IO.nextln();
+        Student[] students = {new Student("Rahul"), new Student("Anuj"), new Student("Raaam")};
+        IO.printf(sortByName.apply(students));
+
     }
 
 
@@ -159,6 +176,7 @@ public class LambdaExpressions {
             IntStream.range(1, ++n).reduce(1, (r, i) -> r * i);
 
 
+    // 14.
     static BiFunction<Integer[], Integer, Integer> binarySearch = (array, a) -> {
         int start = 0;
         int end = array.length - 1;
@@ -178,5 +196,76 @@ public class LambdaExpressions {
         }
         return -1;
     };
+
+
+    class Stone {
+        private int weight;
+        private String color;
+
+        Stone(int weight, String color) {
+            this.weight = weight;
+            this.color = color;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public String getColor() {
+            return color;
+        }
+    }
+
+    // 15. Get Total Weight of Stones
+    public static Function<Stone[], Integer> getTotalWeight = (stones) -> {
+        return Arrays.stream(stones).reduce(0, (total, s) -> total + s.getWeight(), Integer::sum);
+    };
+
+
+    // 16.
+    public static Function<Stone[], Stone[]> getRedStone = (stones) -> {
+        return Arrays.stream(stones).filter(s -> s.getColor().equals("red")).toArray(Stone[]::new);
+    };
+
+    //    17.
+    public static Function<Integer, int[]> factors = (n) -> {
+
+        return IntStream.range(1, n / 2).filter(i -> n % i == 0).toArray();
+    };
+
+    // 18. Create a lambda expression that removes all whitespace from a string.
+    public static UnaryOperator<String> removeAllWhiteSpaces = (s) -> {
+        return s.chars().filter(i -> !Character.isWhitespace(i)).mapToObj(Character::toString).collect(Collectors.joining());
+    };
+
+    // 19.
+    public static Function<Integer, Boolean> isPrime = (n) -> {
+        if (n == 1) return false;
+        return IntStream.range(2, (int) Math.sqrt(n) + 1).filter(i -> n % i == 0).count() == 0;
+    };
+
+
+    // 20. Write a lambda to return the reverse of a string.
+    public static UnaryOperator<String> reverseString = (s) ->
+            Arrays.stream(s.split("")).reduce("", (a, b) -> b + a);
+
+
+    record Student(String name) {
+    }
+
+    // 21. Create a list of student objects and use a lambda to sort by name.
+    public static UnaryOperator<Student[]> sortByName = (ls) ->
+            Arrays.stream(ls).sorted(Comparator.comparing(s -> s.name)).toArray(Student[]::new);
+
+    // 22. Use lambda to filter names starting with a specific letter.
+    public static BiFunction<String[], String, String[]> fil = (ls, str) ->
+            Arrays.stream(ls).filter(s -> s.startsWith(str)).toArray(String[]::new);
+
+//    Create a lambda to count how many times a character appears in a string.
+
+//    Implement a lambda to return the longest string in a list.
+
+//    Write a program using lambda to calculate the average of a list of doubles.
+
 
 }
