@@ -7,12 +7,17 @@ Design Patterns are standard solutions to common software design problems. They 
 1. ### Creational Design Pattern
 
    Focus on the process of object creation or problems related to object creation.   
-   Eg. Singleton, Factory, Builder, Prototype
+   - [x] Singleton
+   - [x] Factory
+   - [x] Builder
+   - [x] Prototype
 
 2. ### Structural Design Pattern 
 
    Solves problems related to how classes and objects are composed/assembled to form larger structures which are efficient and flexible in nature.  
-   Eg. Adapter, Bridge, Proxy
+     - [x] Adapter
+     - [x] Bridge
+     - [ ] Proxy
 
 3. ### Behavioral Design Pattern
 

@@ -1,7 +1,7 @@
 # 🧬 Prototype Design Pattern
 
 Prototype is a creational design pattern that lets you create objects by copying (cloning) an existing object (called a prototype), instead of creating a new one from scratch.
-
+![alt text](https://refactoring.guru/images/patterns/content/prototype/prototype-comic-3-en-2x.png)
 ### Key Idea
 
 * Instead of using new, you copy an existing object.  
