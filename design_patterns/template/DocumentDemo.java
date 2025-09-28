@@ -1,6 +1,5 @@
 package design_patterns.template;
 
-
 public class DocumentDemo {
     public static void main(String[] args) {
         DocumentEditor pdf = new PdfEditor();
@@ -13,104 +12,102 @@ public class DocumentDemo {
 
 }
 
-abstract class DocumentEditor {
-    abstract void writeContent(String content);
+interface DocumentEditor {
+    public void writeContent(String content);
 
-    abstract void writeHeader(String header);
+    public void writeHeader(String header);
 
-    abstract void writeFooter(String footer);
+    public void writeFooter(String footer);
 
-    abstract String getFooter();
+    public String getFooter();
 
-    abstract String getContent();
+    public String getContent();
 
-    abstract String getHeader();
+    public String getHeader();
 
-    abstract String getFooterTag();
+    public String getFooterTag();
 
-    abstract String getContentTag();
+    public String getContentTag();
 
-    abstract String getHeaderTag();
+    public String getHeaderTag();
 
-    final void export() {
+    default public void export() {
         System.out.println("Document Exporting...");
-        String data =
-                "<" + getHeaderTag() + ">" + getHeader() + "</" + getHeaderTag() + ">\n" +
-                        "<" + getContentTag() + ">" + getContent() + "</" + getContentTag() + ">\n" +
-                        "<" + getFooterTag() + ">" + getFooter() + "</" + getFooterTag() + ">\n";
+        String data = "<" + getHeaderTag() + ">" + getHeader() + "</" + getHeaderTag() + ">\n" +
+                "<" + getContentTag() + ">" + getContent() + "</" + getContentTag() + ">\n" +
+                "<" + getFooterTag() + ">" + getFooter() + "</" + getFooterTag() + ">\n";
         System.out.println(data);
     }
 
 }
 
-abstract class Document extends DocumentEditor {
+abstract class Document implements DocumentEditor {
     StringBuilder content = new StringBuilder();
     StringBuilder header = new StringBuilder();
     StringBuilder footer = new StringBuilder();
 
     @Override
-    void writeContent(String content) {
+    public void writeContent(String content) {
         this.content.append(content);
     }
 
     @Override
-    void writeHeader(String header) {
+    public void writeHeader(String header) {
         this.header.append(header);
     }
 
     @Override
-    void writeFooter(String footer) {
+    public void writeFooter(String footer) {
         this.footer.append(footer);
     }
 
     @Override
-    String getFooter() {
+    public String getFooter() {
         return this.footer.toString();
     }
 
     @Override
-    String getContent() {
+    public String getContent() {
         return this.content.toString();
     }
 
     @Override
-    String getHeader() {
+    public String getHeader() {
         return this.header.toString();
     }
 
 }
 
-
 class PdfEditor extends Document {
     @Override
-    String getContentTag() {
+    public String getContentTag() {
         return "pdf-content";
     }
 
     @Override
-    String getHeaderTag() {
+    public String getHeaderTag() {
         return "pdf-header";
     }
 
     @Override
-    String getFooterTag() {
+    public String getFooterTag() {
         return "pdf-footer";
     }
 }
 
 class HtmlEditor extends Document {
     @Override
-    String getFooterTag() {
+    public String getFooterTag() {
         return "footer";
     }
 
     @Override
-    String getContentTag() {
+    public String getContentTag() {
         return "p";
     }
 
     @Override
-    String getHeaderTag() {
+    public String getHeaderTag() {
         return "header";
     }
 }

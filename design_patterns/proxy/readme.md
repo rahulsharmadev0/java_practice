@@ -1,7 +1,9 @@
-# Proxy Design Pattern
+# [Proxy Design Pattern](https://refactoring.guru/design-patterns/proxy)
 
 Proxy is a structural design pattern that lets you control access to another object (called the real subject) by placing a proxy object in front of it.  
 The proxy acts like a gatekeeper — it can control, delay, restrict, or enhance access to the real object.
+
+![proxy img](https://refactoring.guru/images/patterns/diagrams/proxy/solution-en-2x.png)
 
 ### Key Idea
 
