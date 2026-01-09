@@ -1,5 +1,5 @@
-import utils.IO;
 
+import utils.IO;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiFunction;
