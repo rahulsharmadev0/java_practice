@@ -8,7 +8,7 @@ You are required to implement a mobile application analysis tool in Java. This t
 
 ### **Class Specifications**
 
-#### **1. Class: `App**`
+#### 1. Class: `App`
 
 - **Data Members (Private):**
 - `String name`
@@ -22,7 +22,7 @@ You are required to implement a mobile application analysis tool in Java. This t
 - Public getters for all data members.
 - A `toString()` method (provided in the stub) for easy identification of objects.
 
-#### **2. Class: `MobileAppAnalyzer**`
+#### 2. Class: `MobileAppAnalyzer`
 
 Implement the following methods using **Java Streams**:
 
