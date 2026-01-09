@@ -30,6 +30,9 @@ To calculate the indices for the schemes, treat the enum constants as a circular
 - **Triadic:**
 - **Analogous:**
 
+1. Triadic: $Index \pm 2$
+2. Analogous: $Index \pm 1$
+
 ---
 
 ### **Sample Input/Output**
