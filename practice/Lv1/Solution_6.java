@@ -1,6 +1,8 @@
 package Lv1;
 
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -109,19 +111,49 @@ class TickerSummary {
 class MarketAnalyzer {
 
     public Map<Exchange, List<TickerSummary>> generateExchangeReport(List<Trade> trades, long startTime, long endTime) {
-        return trades.stream().collect(Collectors.groupingBy(Exchange::name)).
+        return trades.stream()
+                .filter(t -> t.getTimestamp() >= startTime && t.getTimestamp() <= endTime)
+                .collect(Collectors.groupingBy(Trade::getExchange,
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(Trade::getTicker),
+                                tickerMap -> tickerMap.entrySet().stream()
+                                        .map(e -> {
+                                            List<Trade> ts = e.getValue();
+                                            return new TickerSummary(
+                                                    e.getKey(),
+                                                    ts.stream().mapToDouble(Trade::getPrice).average().orElse(0),
+                                                    ts.stream().mapToLong(Trade::getVolume).sum(),
+                                                    ts.stream().mapToDouble(Trade::getPrice).max().orElse(0));
+
+                                        }).toList())));
     }
 
+    // Map getExchange -> TickerMap -> TickerVolumeMap -> max(value) -> create
     public Map<Exchange, Optional<TickerSummary>> getMostActiveTickerByExchange(List<Trade> trades) {
-        return null;
+        return trades.stream().collect(
+                Collectors.groupingBy(
+                        Trade::getExchange,
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(
+                                        Trade::getTicker,
+                                        Collectors.summingLong(Trade::getVolume)),
+                                tickerVolumeMap -> tickerVolumeMap.entrySet().stream()
+                                        .max(Map.Entry.comparingByValue())
+                                        .map(e -> new TickerSummary(e.getKey(), 0.0, e.getValue(), 0.0)))));
     }
 
     public Map<Boolean, List<Trade>> partitionSmallTrades(List<Trade> trades, int volumeThreshold) {
-        return null;
+        return trades.stream().collect(Collectors.partitioningBy(trade -> trade.getVolume() < volumeThreshold));
     }
 
     public List<String> getVolatileTickers(List<Trade> trades, double percentageDiff) {
-        return null;
+        return trades.stream()
+                .collect(Collectors.groupingBy(Trade::getTicker))
+                .entrySet().stream()
+                .filter(map -> {
+                    var data = map.getValue().stream().collect(Collectors.summarizingDouble(Trade::getPrice));
+                    return ((data.getMax() - data.getMin()) / data.getMin()) > percentageDiff;
+                }).map(Map.Entry::getKey).toList();
     }
 }
 

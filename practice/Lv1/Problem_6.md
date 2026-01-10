@@ -20,7 +20,7 @@
 
 - **Goal:** Return a list of ticker names that are considered "volatile."
 - **Criteria:** A ticker is volatile if the difference between its **Highest Price** and **Lowest Price** is greater than `percentageDiff` of its lowest price.
-- Formula:
+- Formula: $(Max - Min) / Min > percentageDiff$
 
 ---
 
