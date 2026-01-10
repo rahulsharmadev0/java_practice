@@ -1,10 +1,10 @@
-package tasks;
+package Lv1;
 
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
-public class Task5 {
+public class Solution_5 {
 
     static final PerformOperation performOperation = new PerformOperation();
 

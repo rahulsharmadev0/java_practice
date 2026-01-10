@@ -1,7 +1,8 @@
-package tasks;
+package Lv1;
+
 import java.util.*;
 
-public class Task3 {
+public class Solution_3 {
     public static void main(String[] args) {
         Source.main(args);
     }

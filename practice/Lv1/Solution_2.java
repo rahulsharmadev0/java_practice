@@ -1,11 +1,11 @@
-package tasks;
+package Lv1;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class Task2 {
+public class Solution_2 {
     public static void main(String[] args) {
         Source.main(args);
     }
@@ -21,11 +21,11 @@ class Source {
         apps.add(new App("App4", 300, 3.7));
         apps.add(new App("App5", 20000, 4.9));
 
-         MobileAppAnalyzer  analyzer = new MobileAppAnalyzer();
+        MobileAppAnalyzer analyzer = new MobileAppAnalyzer();
 
-         System.out.println(analyzer.filterRatings(apps));
+        System.out.println(analyzer.filterRatings(apps));
 
-         System.out.println(analyzer.getHighestDownloadApp(apps));
+        System.out.println(analyzer.getHighestDownloadApp(apps));
 
     }
 

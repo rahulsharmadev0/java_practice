@@ -1,9 +1,8 @@
-package tasks;
+package Lv1;
 
 import java.util.regex.Pattern;
 
-// Task = Source
-public class Task0 {
+public class Solution_0 {
 
     public static void main(String[] args) {
         Employee employee = new Employee("Rahul", "Sharma", "324412");

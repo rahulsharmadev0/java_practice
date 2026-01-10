@@ -1,9 +1,9 @@
-package tasks;
+package Lv1;
 
 import java.awt.Color;
 import java.util.EnumSet;
 
-public class Task1 {
+public class Solution_1 {
     public static void main(String[] args) {
         Source.main(args);
     }
@@ -61,14 +61,14 @@ class ColorPalette {
         Colour fast = array[(baseIdx + 2) % length];
         Colour forth = array[(baseIdx + 4) % length];
         return new Colour[] { baseColor, fast, forth };
-        
+
     }
-    
+
     private Colour[] findAnalogousColors(Colour baseColor) {
         Colour[] array = Colour.values();
         int baseIdx = baseColor.ordinal();
         int length = array.length;
-        
+
         // 1 and 5 positions away
         Colour fast = array[(baseIdx + 1) % length];
         Colour forth = array[(baseIdx + 5) % length];
