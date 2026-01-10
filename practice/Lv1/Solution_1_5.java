@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
-public class Solution_5 {
+public class Solution_1_5 {
 
     static final PerformOperation performOperation = new PerformOperation();
 

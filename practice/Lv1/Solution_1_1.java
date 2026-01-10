@@ -3,7 +3,7 @@ package Lv1;
 import java.awt.Color;
 import java.util.EnumSet;
 
-public class Solution_1 {
+public class Solution_1_1 {
     public static void main(String[] args) {
         Source.main(args);
     }

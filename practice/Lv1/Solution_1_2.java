@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class Solution_2 {
+public class Solution_1_2 {
     public static void main(String[] args) {
         Source.main(args);
     }

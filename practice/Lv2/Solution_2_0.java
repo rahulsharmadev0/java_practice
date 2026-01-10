@@ -1,12 +1,10 @@
-package Lv1;
+package Lv2;
 
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class Solution_6 {
+public class Solution_2_0 {
     public static void main(String[] args) {
         Source.main(args);
     }
@@ -154,6 +152,59 @@ class MarketAnalyzer {
                     var data = map.getValue().stream().collect(Collectors.summarizingDouble(Trade::getPrice));
                     return ((data.getMax() - data.getMin()) / data.getMin()) > percentageDiff;
                 }).map(Map.Entry::getKey).toList();
+    }
+
+    // -------------------------------------
+    // NOT IN QUESTION, JUST FOR PRACTICEING
+    // -------------------------------------
+
+    // Count how many trades happened per Exchange.
+    Map<Exchange, Long> getTradeCountPerExchange(List<Trade> trades) {
+        return trades.stream().collect(
+                Collectors.groupingBy(Trade::getExchange,
+                        Collectors.counting()));
+    }
+
+    Map<String, Long> getTotalVolumePerTicker(List<Trade> trades) {
+
+        // Manual processing via accumulator and combiner
+        return trades.stream().collect(
+                HashMap::new,
+                // Use merge because multiple ticker may present in `trades`,
+                // `put` method drop previous one
+                (map, trade) -> map.merge(trade.getTicker(), (long) trade.getVolume(), Long::sum),
+
+                // In sequential Stream is never call but mandatory, Usefull in parallel stream.
+                (map, map2) -> map2.forEach((k, v) -> map.merge(k, v, Long::sum)));
+
+        // return trades.stream().collect(
+        // Collectors.groupingBy(Trade::getTicker,
+        // Collectors.summingLong(Trade::getVolume)));
+    }
+
+    // Group trades by Exchange → then by ticker → count trades.
+    Map<Exchange, Map<String, Long>> getTradeCountPerExchangeAndTicker(List<Trade> trades) {
+        return trades.stream().collect(
+                Collectors.groupingBy(
+                        Trade::getExchange,
+                        Collectors.groupingBy(
+                                Trade::getTicker,
+                                Collectors.counting())));
+
+    }
+
+    // For each Exchange, list tickers whose total volume > 100.
+    public Map<Exchange, List<String>> getHighVolumeTickersByExchange(List<Trade> trades) {
+        return trades.stream().collect(
+                Collectors.groupingBy(
+                        Trade::getExchange,
+                        Collectors.collectingAndThen(
+                                Collectors.groupingBy(
+                                        Trade::getTicker,
+                                        Collectors.summingLong(Trade::getVolume)),
+                                tickerVolumeMap -> tickerVolumeMap.entrySet().stream()
+                                        .filter(map -> map.getValue() > 100)
+                                        .map(map -> map.getKey()).toList())));
     }
 }
 
