@@ -98,12 +98,12 @@ class Employee {
 class CorporateAnalyzer {
 
     public List<Employee> identifyTopTalent(List<Employee> employees) {
-        // TODO: Use Stream API to filter by score >= 4.5 and salary > 80000
+        // TODO: Implement logic
         return null;
     }
 
     public Optional<Employee> getHighestPaidInDept(List<Employee> employees, Department targetDept) {
-        // TODO: Use Stream API to find max salary within a specific department
+        // TODO: Implement logic
         return null;
     }
 }

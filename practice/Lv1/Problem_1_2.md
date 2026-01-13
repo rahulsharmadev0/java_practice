@@ -82,12 +82,12 @@ class App {
 class MobileAppAnalyzer {
 
     public List<App> filterRatings(List<App> apps) {
-        // TODO: Use Stream API to filter rating >= 4.0 and downloads >= 1000
+        // TODO: Implement logic
         return null;
     }
 
     public Optional<App> getHighestDownloadApp(List<App> apps) {
-        // TODO: Use Stream API to find the app with the max download count
+        // TODO: Implement logic
         return null;
     }
 }

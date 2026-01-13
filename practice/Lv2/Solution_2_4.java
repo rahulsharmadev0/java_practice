@@ -3,7 +3,6 @@ package Lv2;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -170,6 +169,12 @@ class SubscriptionAnalytics {
             double usageDropPercentage) {
         LocalDate now = LocalDate.now();
 
+        var activeSubsByOrgId = subscriptions.stream().filter(
+                sub -> !sub.getStartDate().isBefore(now) && !sub.getEndDate().isAfter(now)).collect(
+                        Collectors.groupingBy(
+                                Subscription::getOrganizationId,
+                                Collectors.toList()));
+
         var orgActive = subscriptions.stream().filter(
                 sub -> {
                     return now.isAfter(sub.getStartDate()) && now.isBefore(sub.getEndDate());
@@ -191,8 +196,6 @@ class SubscriptionAnalytics {
                                             sub.getEndDate().plusDays(1)) / 30.0;
                                     return secondHalfMonths * sub.getMonthlyCost();
                                 })));
-
-
 
         return null;
     }

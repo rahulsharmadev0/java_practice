@@ -97,12 +97,12 @@ class SmartDevice {
 class HomeAutomationHub {
 
     public List<SmartDevice> filterHighPowerDevices(List<SmartDevice> devices, double threshold) {
-        // TODO: Use Stream API to filter active devices > threshold
+        // TODO: Implement logic
         return null;
     }
 
     public Optional<SmartDevice> findMostConsumingByType(List<SmartDevice> devices, DeviceType targetType) {
-        // TODO: Use Stream API to find max power device of specific type
+        // TODO: Implement logic
         return null;
     }
 }
