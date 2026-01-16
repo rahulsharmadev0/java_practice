@@ -171,18 +171,21 @@ class SubscriptionAnalytics {
 
         var activeSubsByOrgId = subscriptions.stream().filter(
                 sub -> !sub.getStartDate().isBefore(now) && !sub.getEndDate().isAfter(now)).collect(
-                        Collectors.groupingBy(
-                                Subscription::getOrganizationId,
-                                Collectors.toList()));
-
-        var orgActive = subscriptions.stream().filter(
-                sub -> {
-                    return now.isAfter(sub.getStartDate()) && now.isBefore(sub.getEndDate());
-                }).collect(
                         Collectors.toMap(
                                 Subscription::getOrganizationId,
                                 s -> s,
                                 (a, b) -> a.getEndDate().isAfter(b.getEndDate()) ? a : b));
+
+        var UserEventsByOrgId = usageEvents.stream().collect(
+                Collectors.groupingBy(
+                        UsageEvent::getOrganizationId));
+        
+        Set<String> atRisks = new HashSet<>();
+        for (UsageEvent event : usageEvents) {
+
+            event.get
+            
+        }
 
         var avgMonthlyUsage = subscriptions.stream().collect(
                 Collectors.groupingBy(
