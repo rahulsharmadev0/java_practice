@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package chat;
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.chat";
+option java_outer_classname = "MessageProto";
+
+message Message {
+  string                    content   = 2;
+  string                    sender    = 3;
+
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+// 
+// Unary MessageService for sending chat messages.
+service MessageService {
+  // SendMessage sends a chat message and returns the server's response with status and message ID.
+  rpc SendMessage(Message) returns (Message);
+}
+
+
+
+// BiChatService is a bidirectional streaming service for real-time chat communication.
+service BiChatService {
+
+  // Chat establishes a bidirectional stream for sending and receiving chat messages in real-time.
+  rpc Chat(stream Message) returns (stream Message);
+  
+}
