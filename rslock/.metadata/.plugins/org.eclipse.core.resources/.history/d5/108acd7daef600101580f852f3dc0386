@@ -1,0 +1,7 @@
+//module rs_encryptor {
+//}
+
+module com.rslock.encryptor {
+    requires rslock.common;
+    requires java.base;
+}

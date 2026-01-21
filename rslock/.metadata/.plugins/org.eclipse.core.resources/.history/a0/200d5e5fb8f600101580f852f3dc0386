@@ -1,0 +1,13 @@
+package com.rslock.common;
+
+import java.util.logging.Level;
+
+public class RsLogger {
+	private RsLogger() {}
+	
+	static void init(String logFileName, Level consoleLevel, Level fileLevel) {
+		
+	}
+	
+
+}

@@ -1,0 +1,11 @@
+package com.rslock.encryptor;
+
+import com.rslock.common.RsCommandLineArgs;
+
+public class RsfileEncryptor {
+    public static void main(String[] args) {
+        RsCommandLineArgs cmdArgs = RsCommandLineArgs.parse(args);
+
+    }
+
+}

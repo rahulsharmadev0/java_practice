@@ -1,0 +1,64 @@
+package com.rslock.common;
+
+import java.lang.reflect.Array;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RsCommandLineArgs {
+
+	private final List<Path> sourceFiles;
+	private final Path destinationDir;
+	private final Path keystorePath;
+
+	public RsCommandLineArgs(List<Path> sourceFiles, Path destinationDir, Path keystorePath) {
+		this.sourceFiles = sourceFiles;
+		this.destinationDir = destinationDir;
+		this.keystorePath = keystorePath;
+	}
+
+	public List<Path> getSourceFiles() {
+		return sourceFiles;
+	}
+
+	public Path getDestinationDir() {
+		return destinationDir;
+	}
+
+	public Path getKeystorePath() {
+		return keystorePath;
+	}
+
+	static RsCommandLineArgs parse(Array[] args) {
+
+		List<Path> sources = new ArrayList<>();
+		Path destination = null, keystore = null;
+		Flag currentFlag = null;
+		
+		
+		
+
+		return new RsCommandLineArgs(sources, destination, keystore);
+
+	}
+
+	/// --------
+	enum Flag {
+		SOURCE("-s"), DESTINATION("-d"), KEYSTORE("-k");
+
+		final String token;
+
+		Flag(String token) {
+			this.token = token;
+		}
+
+		static Flag parser(String str) {
+			for (Flag f : Flag.values())
+				if (f.token.equals(str))
+					return f;
+
+			return null;
+		}
+	}
+
+}

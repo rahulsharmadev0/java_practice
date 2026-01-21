@@ -1,0 +1,5 @@
+package com.rslock.decryptor;
+
+public class RsfileDecryptor {
+
+}

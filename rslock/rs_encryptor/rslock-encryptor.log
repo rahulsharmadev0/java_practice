@@ -1,0 +1,140 @@
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === RSLock File Encryptor ===
+
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Source files: 1
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:   - test1.txt
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Destination: /home/iispl/Videos/my-workspaces/test_data
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Keystore: /home/iispl/Videos/my-workspaces/test.keystore
+Jan 21, 2026 4:04:32 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Loading keystore...
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Keystore loaded
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Available aliases: testkey
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Using alias: testkey
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Private key loaded
+
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Generating initialization vector...
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ IV generated
+
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: [1/1] Processing: test1.txt
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Source size: 36.00 B
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO: .
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output size: 256.00 B
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output file: test1.txt.enc
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:      ✓ Encrypted successfully
+
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === Encryption Complete ===
+Jan 21, 2026 4:04:33 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Total files encrypted: 1
+Jan 21, 2026 4:35:37 PM com.rslock.common.RsLogger init
+INFO: Logging initialized
+Jan 21, 2026 4:35:37 PM com.rslock.common.RsLogger init
+INFO: Log file: /home/iispl/Videos/my-workspaces/rs_encryptor/rslock-encryptor.log
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === RSLock File Encryptor ===
+
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Source files: 1
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:   - test1.txt
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Destination: /home/iispl/Videos/my-workspaces/test_data
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Keystore: /home/iispl/Videos/my-workspaces/test.keystore
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Loading keystore...
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Keystore loaded
+Jan 21, 2026 4:35:37 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Available aliases: testkey
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Using alias: testkey
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Private key loaded
+
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Generating initialization vector...
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ IV generated
+
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: [1/1] Processing: test1.txt
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Source size: 36.00 B
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO: .
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output size: 256.00 B
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output file: test1.txt.enc
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:      ✓ Encrypted successfully
+
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === Encryption Complete ===
+Jan 21, 2026 4:35:38 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Total files encrypted: 1
+Jan 21, 2026 4:40:49 PM com.rslock.common.RsLogger init
+INFO: Logging initialized
+Jan 21, 2026 4:40:49 PM com.rslock.common.RsLogger init
+INFO: Log file: /home/iispl/Videos/my-workspaces/rs_encryptor/rslock-encryptor.log
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === RSLock File Encryptor ===
+
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Source files: 1
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:   - test1.txt
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Destination: /home/iispl/Videos/my-workspaces/test_data
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Keystore: /home/iispl/Videos/my-workspaces/test.keystore
+Jan 21, 2026 4:40:49 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Loading keystore...
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Keystore loaded
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Available aliases: testkey
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Using alias: testkey
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ Private key loaded
+
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Generating initialization vector...
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: ✓ IV generated
+
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: [1/1] Processing: test1.txt
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Source size: 36.00 B
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO: .
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output size: 256.00 B
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor encryptFile
+INFO:      Output file: test1.txt.enc
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO:      ✓ Encrypted successfully
+
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: === Encryption Complete ===
+Jan 21, 2026 4:40:50 PM com.rslock.encryptor.RsfileEncryptor main
+INFO: Total files encrypted: 1

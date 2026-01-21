@@ -1,0 +1,32 @@
+package com.rslock.common;
+
+import java.util.Iterator;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+public class RsLogger {
+	private RsLogger() {
+	}
+
+	static void init(String logFileName, Level consoleLevel, Level fileLevel) {
+
+		Logger root = Logger.getLogger("");
+
+		// Removes all handlers attached directly
+		for (Handler h : root.getHandlers())
+			root.removeHandler(h);
+		
+		
+		 // Console
+		  ConsoleHandler console = new ConsoleHandler();
+          console.setLevel(consoleLevel);
+          console.setFormatter(new SimpleFormatter());
+
+		
+		
+
+	}
+
+}

@@ -1,0 +1,47 @@
+package com.rslock.common;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+
+public class RsLogger {
+	private RsLogger() {
+	}
+
+	static void init(String logFileName, Level consoleLevel, Level fileLevel) throws IOException{
+
+		Logger root = Logger.getLogger("");
+
+		// Removes all handlers attached directly
+		for (Handler h : root.getHandlers())
+			root.removeHandler(h);
+		
+		
+		 // Console
+		  ConsoleHandler console = new ConsoleHandler();
+          console.setLevel(consoleLevel);
+          console.setFormatter(new SimpleFormatter());
+          
+       // File
+         Path logPath = Path.of(logFileName).toAbsolutePath();
+         FileHandler file = new FileHandler(logPath.toString(), true);
+         file.setLevel(fileLevel);
+         file.setFormatter(new SimpleFormatter());
+         
+         root.addHandler(file);
+         root.addHandler(console);
+         root.info("Logging initialized");
+         root.info("Log file: " + logPath);         
+         		
+		
+
+	}
+
+}

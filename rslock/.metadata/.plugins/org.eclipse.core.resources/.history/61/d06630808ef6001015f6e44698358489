@@ -1,0 +1,12 @@
+package com.rslock.common;
+
+public class RsCommandLineArgs {
+	
+	private final List<Path> sourceFiles;
+    private final Path destinationDir;
+    private final Path keystorePath;
+    
+	
+	
+
+}

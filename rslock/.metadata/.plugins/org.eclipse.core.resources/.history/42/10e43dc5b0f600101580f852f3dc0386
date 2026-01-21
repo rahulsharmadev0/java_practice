@@ -1,0 +1,139 @@
+package com.rslock.encryptor;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.util.List;
+
+import javax.crypto.CipherOutputStream;
+import javax.crypto.spec.IvParameterSpec;
+
+import com.rslock.common.CypherConstraints;
+import com.rslock.common.CypherUtility;
+import com.rslock.common.RsCommandLineArgs;
+
+public class RsfileEncryptor {
+
+	private static final int BUFFER_SIZE = 8192;
+
+	public static void main(String[] args) throws Exception {
+		System.out.println("=== RSLock File Encryptor ===\n");
+		
+		// Parse command line arguments
+		RsCommandLineArgs cmdArgs = RsCommandLineArgs.parse(args);
+		List<Path> sourceFiles = cmdArgs.getSourceFiles();
+		Path destinationDir = cmdArgs.getDestinationDir();
+		Path keystorePath = cmdArgs.getKeystorePath();
+
+		System.out.println("Source files: " + sourceFiles.size());
+		for (Path src : sourceFiles) {
+			System.out.println("  - " + src.getFileName());
+		}
+		System.out.println("Destination: " + destinationDir);
+		System.out.println("Keystore: " + keystorePath);
+		System.out.println();
+
+		// Load keystore and keys
+		System.out.println("Loading keystore...");
+		KeyStore keystore = KeyStore.getInstance(CypherConstraints.KEYSTORE_TYPE);
+		
+		try (InputStream keystoreInput = Files.newInputStream(keystorePath)) {
+			// For demo, using "password" - in production would need secure password entry
+			keystore.load(keystoreInput, "password".toCharArray());
+		}
+		
+		System.out.println("✓ Keystore loaded");
+		System.out.println("Available aliases: " + keystore.aliases().nextElement());
+		
+		// Get the alias (assuming first/only entry) and load private key
+		String alias = keystore.aliases().nextElement();
+		System.out.println("Using alias: " + alias);
+		
+		PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, alias, "password".toCharArray());
+		System.out.println("✓ Private key loaded\n");
+
+		// Generate IV for AES encryption
+		System.out.println("Generating initialization vector...");
+		IvParameterSpec iv = CypherUtility.generateIV();
+		System.out.println("✓ IV generated\n");
+
+		// Process each source file sequentially
+		int totalFiles = sourceFiles.size();
+		int processedFiles = 0;
+
+		for (Path sourceFile : sourceFiles) {
+			processedFiles++;
+			System.out.println("[" + processedFiles + "/" + totalFiles + "] Processing: " + sourceFile.getFileName());
+
+			try {
+				encryptFile(sourceFile, destinationDir, privateKey, iv);
+				System.out.println("     ✓ Encrypted successfully\n");
+			} catch (Exception e) {
+				System.err.println("     ✗ Error: " + e.getMessage() + "\n");
+				throw new RuntimeException("Failed to encrypt: " + sourceFile, e);
+			}
+		}
+
+		System.out.println("=== Encryption Complete ===");
+		System.out.println("Total files encrypted: " + processedFiles);
+	}
+
+	/**
+	 * Encrypts a single file using RSA encryption with private key
+	 */
+	private static void encryptFile(Path sourceFile, Path destinationDir, PrivateKey privateKey, IvParameterSpec iv)
+			throws Exception {
+		
+		// Generate output file path
+		String outputFileName = sourceFile.getFileName().toString() + ".enc";
+		Path outputFile = destinationDir.resolve(outputFileName);
+
+		long fileSize = Files.size(sourceFile);
+		System.out.println("     Source size: " + formatBytes(fileSize));
+
+		// Encrypt the file
+		try (InputStream fileInput = Files.newInputStream(sourceFile);
+			 OutputStream fileOutput = Files.newOutputStream(outputFile);
+			 CipherOutputStream cipherOutput = CypherUtility.encryptStream(fileOutput, privateKey, iv)) {
+
+			long bytesCopied = 0;
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int bytesRead;
+			int lastProgressPercent = 0;
+
+            while ((bytesRead = fileInput.read(buffer)) != -1) {
+                cipherOutput.write(buffer, 0, bytesRead);
+                bytesCopied += bytesRead;
+
+                // Show progress percentage
+                int progressPercent = (int) ((bytesCopied * 100) / fileSize);
+                if (progressPercent > lastProgressPercent && progressPercent % 10 == 0) {
+                    System.out.print(".");
+                    lastProgressPercent = progressPercent;
+                }
+            }
+
+            cipherOutput.flush();
+        }
+
+        long encryptedSize = Files.size(outputFile);
+        System.out.println();
+        System.out.println("     Output size: " + formatBytes(encryptedSize));
+        System.out.println("     Output file: " + outputFile.getFileName());
+    }
+
+    /**
+     * Format bytes to human-readable format
+     */
+    private static String formatBytes(long bytes) {
+        if (bytes <= 0)
+            return "0 B";
+        final String[] units = new String[] { "B", "KB", "MB", "GB" };
+        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+        return String.format("%.2f %s", bytes / Math.pow(1024, digitGroups), units[digitGroups]);
+    }
+
+}

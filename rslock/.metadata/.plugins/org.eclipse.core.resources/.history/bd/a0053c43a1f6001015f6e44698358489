@@ -1,0 +1,23 @@
+package com.rslock.encryptor;
+
+import javax.crypto.SecretKey;
+
+import com.rslock.common.CypherUtility;
+import com.rslock.common.RsCommandLineArgs;
+
+public class RsfileEncryptor {
+	
+	
+    public static void main(String[] args) throws Exception{
+        RsCommandLineArgs cmdArgs = RsCommandLineArgs.parse(args);
+        
+        SecretKey  key =  CypherUtility.generateAESKey();
+        
+        
+        
+        
+        
+        
+    }
+
+}

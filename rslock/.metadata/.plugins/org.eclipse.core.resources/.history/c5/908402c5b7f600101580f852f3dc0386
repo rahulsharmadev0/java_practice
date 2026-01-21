@@ -1,0 +1,5 @@
+package com.rslock.common;
+
+public class RsLogger {
+
+}

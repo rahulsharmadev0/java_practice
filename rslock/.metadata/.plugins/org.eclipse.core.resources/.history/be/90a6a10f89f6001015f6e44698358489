@@ -1,0 +1,7 @@
+//module common {
+//}
+
+module rslock.common {
+    exports rslock.common;
+    requires java.base;
+}
