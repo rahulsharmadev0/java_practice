@@ -1,0 +1,147 @@
+Jan 22, 2026 12:43:22 AM com.rslock.common.RsLogger init
+INFO: Logging initialized
+Jan 22, 2026 12:43:22 AM com.rslock.common.RsLogger init
+INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-decryptor.log
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === RSLock File Decryptor ===
+
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Source files: 1
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:   - test1.txt.rslocked
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Destination: output_data
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Keystore: rskeystore.p12
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Loading keystore...
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Keystore loaded
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Available aliases: [rslock-key]
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using alias: rslock-key
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Private key loaded
+
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: [1/1] Processing: test1.txt.rslocked
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Encrypted size: 328.00 B
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Reading encryption header...
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting AES key with RSA...
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting file data...
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output size: 36.00 B
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output file: test1.txt
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:      ✓ Decrypted successfully
+
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === Decryption Complete ===
+Jan 22, 2026 12:43:22 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Total files decrypted: 1
+Jan 22, 2026 12:44:53 AM com.rslock.common.RsLogger init
+INFO: Logging initialized
+Jan 22, 2026 12:44:53 AM com.rslock.common.RsLogger init
+INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-decryptor.log
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === RSLock File Decryptor ===
+
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Source files: 1
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:   - test1.txt.rslocked
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Destination: output_data
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Keystore: rskeystore.p12
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Loading keystore...
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Keystore loaded
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Available aliases: [rslock-key]
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using alias: rslock-key
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Private key loaded
+
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: [1/1] Processing: test1.txt.rslocked
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Encrypted size: 376.00 B
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Reading encryption header...
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting AES key with RSA...
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting file data...
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output size: 81.00 B
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output file: test1.txt
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:      ✓ Decrypted successfully
+
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === Decryption Complete ===
+Jan 22, 2026 12:44:53 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Total files decrypted: 1
+Jan 22, 2026 12:45:40 AM com.rslock.common.RsLogger init
+INFO: Logging initialized
+Jan 22, 2026 12:45:40 AM com.rslock.common.RsLogger init
+INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-decryptor.log
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === RSLock File Decryptor ===
+
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Source files: 1
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:   - test1.txt.rslocked
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Destination: output_data
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Keystore: rskeystore.p12
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Loading keystore...
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Keystore loaded
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Available aliases: [rslock-key]
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Using alias: rslock-key
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: ✓ Private key loaded
+
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: [1/1] Processing: test1.txt.rslocked
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Encrypted size: 376.00 B
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Reading encryption header...
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting AES key with RSA...
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Decrypting file data...
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output size: 81.00 B
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor decryptFile
+INFO:      Output file: test1.txt
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO:      ✓ Decrypted successfully
+
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: === Decryption Complete ===
+Jan 22, 2026 12:45:40 AM com.rslock.decryptor.RsfileDecryptor main
+INFO: Total files decrypted: 1

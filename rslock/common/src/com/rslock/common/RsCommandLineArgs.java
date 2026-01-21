@@ -26,12 +26,12 @@ public class RsCommandLineArgs {
 			}
 		}
 
-		// Validate destination directory exists
+		// Validate destination directory exists (if provided)
 		if (destinationDir != null && !Files.exists(destinationDir)) {
 			throw new IllegalArgumentException("Destination directory does not exist: " + destinationDir);
 		}
 
-		// Validate keystore path exists
+		// Validate keystore path exists (if provided)
 		if (keystorePath != null && !Files.exists(keystorePath)) {
 			throw new IllegalArgumentException("Keystore file does not exist: " + keystorePath);
 		}

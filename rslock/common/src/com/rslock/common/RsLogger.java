@@ -2,7 +2,6 @@ package com.rslock.common;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;

@@ -28,7 +28,11 @@ Both `RsfileEncryptor.jar` and `RsfileDecryptor.jar` use the same common Java Ke
 - Type: PKCS12
 - File Name: rskeystore.p12
 - Provider: Bouncy Castle
-- Path: where the JAR is executed or passed as an argument
+- Path: where the JAR is executed or passed as an argument (optional)
+### Purpose
+- Store RSA Public and Private Keys for encrypting and decrypting AES keys and `rskeystore.p12` shared between both JARs
+- Public Key: Used by `RsfileEncryptor.jar` for encrypting the AES key
+- Private Key: Used by `RsfileDecryptor.jar` for decrypting the AES key 
 
 ### Encryption & Decryption Flow
 - Encryptor JAR
