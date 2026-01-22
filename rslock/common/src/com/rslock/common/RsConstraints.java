@@ -24,12 +24,12 @@ public final class RsConstraints {
 	public static final String DEFAULT_KEYSTORE_FILENAME = "rskeystore.p12";
 	public static final char[] DEFAULT_KEYSTORE_PASSWORD = "rslock-password".toCharArray();
 
+	public static final String DEFAULT_ENCRYPTED_FILE_EXTENSION = ".rslocked";
+
 	// Buffer size for file streams operations
 	public static final int DEFAULT_BUFFER_SIZE = 8192;
 
 	// Encryption Constraints
 	public static final int IV_SIZE = 16; // bytes (128 bits for AES)
-
-	
 
 }

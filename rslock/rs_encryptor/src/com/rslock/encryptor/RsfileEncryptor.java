@@ -16,6 +16,11 @@ import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
 
+/**
+ * Main entry point for RSLock file encryption.
+ * Responsibility: Coordinate the encryption workflow and define encryption
+ * logic
+ */
 public class RsfileEncryptor {
 
 	private static final String LOG_FILENAME = "rslock-encryptor.log";
@@ -25,24 +30,23 @@ public class RsfileEncryptor {
 	public static void main(String[] args) throws Exception {
 		RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
 
-		LOG.info(() -> "=== RSLock File Encryptor ===\n");
+		LOG.info("=== RSLock File Encryptor ===\n");
 
 		// Parse command line arguments
 		RsLockConfig config = RsLockConfig.fromArgs(args);
 
 		if (!config.isKeystoreExists()) {
-			LOG.info(() -> "Keystore not found, generating new keystore...");
-			final Path finalKeystorePathForGen = config.getKeystorePath();
+			LOG.info("Keystore not found, generating new keystore...");
 
 			boolean generated = CypherUtility.generateKeyStore(
-					finalKeystorePathForGen,
+					config.getKeystorePath(),
 					RsConstraints.DEFAULT_KEYSTORE_PASSWORD,
 					config.getAlias());
 
 			if (generated) {
-				LOG.info(() -> "✓ Keystore generated successfully: " + finalKeystorePathForGen.toAbsolutePath());
+				LOG.info("✓ Keystore generated successfully: " + config.getKeystorePath().toAbsolutePath());
 			} else {
-				LOG.severe(() -> "✗ Failed to generate keystore.");
+				LOG.severe("✗ Failed to generate keystore.");
 				throw new RuntimeException("Failed to generate keystore. Please create it manually using keytool.");
 			}
 		}
@@ -56,88 +60,71 @@ public class RsfileEncryptor {
 		// Default destination to source file's directory if not provided
 		if (destinationDir == null && !sourceFiles.isEmpty()) {
 			destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
-			final Path finalDestDir = destinationDir;
-			LOG.info(() -> "Using default destination: " + finalDestDir);
+			LOG.info("Using default destination: " + destinationDir);
 		}
 
-		final Path finalDestinationDir = destinationDir;
-		final Path finalKeystorePath2 = keystorePath;
-
-		LOG.info(() -> "Source files: " + sourceFiles.size());
+		LOG.info("Source files: " + sourceFiles.size());
 		for (Path src : sourceFiles) {
-			LOG.info(() -> "  - " + src.getFileName());
+			LOG.info("  - " + src.getFileName());
 		}
 
-		LOG.info(() -> "Destination: " + finalDestinationDir.toString());
-		LOG.info(() -> "Keystore: " + finalKeystorePath2.toString());
+		LOG.info("Destination: " + destinationDir.toString());
+		LOG.info("Keystore: " + keystorePath.toString());
 
 		// Load keystore and keys
-		LOG.info(() -> "Loading keystore...");
+		LOG.info("Loading keystore...");
 		KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
-		try (InputStream keystoreInput = Files.newInputStream(finalKeystorePath2)) {
+		try (InputStream keystoreInput = Files.newInputStream(keystorePath)) {
 			keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
 		}
 
-		LOG.info(() -> "✓ Keystore loaded");
+		LOG.info("✓ Keystore loaded");
 
 		PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
-		LOG.info(() -> "✓ Public key loaded\n");
+		LOG.info("✓ Public key loaded\n");
 
-		// Process each source file sequentially
-		int totalFiles = sourceFiles.size();
-		int processedFiles = 0; // for logging only
+		// Use generic ParallelFileExecutor with encryption task
+		final Path finalDestinationDir = destinationDir;
+		final PublicKey finalPublicKey = publicKey;
 
-		for (Path sourceFile : sourceFiles) {
-			processedFiles++;
-			final int currentFile = processedFiles; // for logging only
-			LOG.info(() -> "[" + currentFile + "/" + totalFiles + "] Processing: " + sourceFile.getFileName());
+		ExecutionResult result = ParallelFileExecutor.executeInParallel(
+				sourceFiles,
+				finalDestinationDir,
+				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, finalPublicKey));
 
-			try {
-				encryptFile(sourceFile, finalDestinationDir, publicKey);
-				LOG.info(() -> "     ✓ Encrypted successfully\n");
-			} catch (Exception e) {
-				LOG.warning("     ✗ Error: " + e.getMessage());
-				throw new RuntimeException("Failed to encrypt: " + sourceFile, e);
-			}
-		}
-
-		final int finalProcessedFiles = processedFiles;
-		LOG.info(() -> "=== Encryption Complete ===");
-		LOG.info(() -> "Total files encrypted: " + finalProcessedFiles);
+		// Print clean summary
+		printSummary(result);
 	}
 
 	/**
-	 * Encrypts a single file using hybrid encryption:
-	 * - Generates random AES key for this file
-	 * - Encrypts file data with AES-CBC
-	 * - Encrypts AES key with RSA public key
-	 * - Stores encrypted key + IV + encrypted data in .rslocked file
+	 * Encrypts a single file using hybrid encryption.
+	 * This is the actual encryption logic specific to this encryptor.
 	 */
-	private static void encryptFile(Path sourceFile, Path destinationDir, PublicKey publicKey)
+	private static FileResult encryptFile(Path sourceFile, Path destinationDir, PublicKey publicKey)
 			throws Exception {
 
 		// Generate output file path with .rslocked extension
-		String outputFileName = sourceFile.getFileName().toString() + ".rslocked";
+		String outputFileName = sourceFile.getFileName().toString() + RsConstraints.DEFAULT_ENCRYPTED_FILE_EXTENSION;
 		Path outputFile = destinationDir.resolve(outputFileName);
 
 		long fileSize = Files.size(sourceFile);
-		LOG.info(() -> "     Source size: " + Utility.formatBytes(fileSize));
+		LOG.fine("     Source size: " + Utility.formatBytes(fileSize));
 
 		// Generate unique AES key for this file
-		LOG.info(() -> "     Generating AES key...");
+		LOG.fine("     Generating AES key...");
 		SecretKey aesKey = CypherUtility.generateAESKey();
 
 		// Generate unique IV for this file
-		LOG.info(() -> "     Generating IV...");
+		LOG.fine("     Generating IV...");
 		IvParameterSpec iv = CypherUtility.generateIV();
 
 		// Encrypt the AES key with RSA public key
-		LOG.info(() -> "     Encrypting AES key with RSA...");
+		LOG.fine("     Encrypting AES key with RSA...");
 		byte[] encryptedAESKey = CypherUtility.encryptAESKeyWithRSA(aesKey, publicKey);
 
 		// Encrypt the file
-		LOG.info(() -> "     Encrypting file data...");
+		LOG.fine("     Encrypting file data...");
 		try (InputStream fileInput = Files.newInputStream(sourceFile);
 				OutputStream fileOutput = Files.newOutputStream(outputFile)) {
 
@@ -169,8 +156,28 @@ public class RsfileEncryptor {
 
 		long encryptedSize = Files.size(outputFile);
 
-		LOG.info(() -> "     Output size: " + Utility.formatBytes(encryptedSize));
-		LOG.info(() -> "     Output file: " + outputFile.getFileName());
+		LOG.fine("     Output size: " + Utility.formatBytes(encryptedSize));
+		LOG.fine("     Output file: " + outputFile.getFileName());
+
+		return new FileResult(sourceFile.getFileName().toString(), outputFileName, encryptedSize);
 	}
 
+	/**
+	 * Prints a clean summary of encryption results
+	 */
+	private static void printSummary(ExecutionResult result) {
+		LOG.info("=== Encryption Complete ===");
+
+		for (FileResult fileResult : result.getFileResults()) {
+			if (fileResult.isSuccess()) {
+				LOG.info("✓ " + fileResult.getSourceFileName() + " → " + fileResult.getOutputFileName() +
+						" (" + Utility.formatBytes(fileResult.getOutputSize()) + ")");
+			} else {
+				LOG.warning("✗ " + fileResult.getSourceFileName() + " (Error: " + fileResult.getErrorMessage() + ")");
+			}
+		}
+
+		LOG.info("Total files encrypted: " + result.getSuccessCount() + "/" + result.getTotalFiles());
+		LOG.info("Thread pool size used: " + result.getThreadPoolSize());
+	}
 }

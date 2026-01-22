@@ -4,8 +4,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RsLockConfig {
+	private static final Logger logger = Logger.getLogger(RsLockConfig.class.getName());
 	private final List<Path> sourceFiles;
 	private final Path destinationDir;
 	private final Path keystorePath;
@@ -20,6 +22,7 @@ public class RsLockConfig {
 
 	// Ensure all required parameters are present
 	public void validate() {
+		logger.fine("Validating configuration...");
 		if (sourceFiles == null || sourceFiles.isEmpty()) {
 			throw new IllegalArgumentException("At least one source file must be specified.");
 		}
@@ -69,7 +72,8 @@ public class RsLockConfig {
 	}
 
 	// Generate destination directory for a given source file
-	// so, that if destinationDir is null, it returns the source file's parent directory
+	// so, that if destinationDir is null, it returns the source file's parent
+	// directory
 	public Path generateDestinationDir(Path sourceFile) {
 		return destinationDir != null ? destinationDir : sourceFile.toAbsolutePath().getParent();
 	}
@@ -87,6 +91,7 @@ public class RsLockConfig {
 	// Use this method to parse command line arguments
 	public static RsLockConfig fromArgs(String[] args)
 			throws IllegalArgumentException {
+		logger.fine("Parsing command line arguments...");
 		List<Path> sources = new ArrayList<>();
 		Path destination = null;
 		Path keystore = null;

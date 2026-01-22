@@ -1,376 +1,272 @@
-Jan 22, 2026 12:29:16 AM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 12:29:16 AM com.rslock.common.RsLogger init
-INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:08:30] [INFO] [RsLogger]
+- Logging initialized
+[2026-01-23 01:08:30] [INFO] [RsLogger]
+- Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:08:30] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: output_data
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 12:29:16 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 12:42:32 AM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 12:42:32 AM com.rslock.common.RsLogger init
-INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 12:42:32 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:08:30] [INFO] [RsLockConfig] 
+- Parsing command line arguments...
+[2026-01-23 01:08:30] [INFO] [RsfileEncryptor] Keystore not found, generating new keystore...
+[2026-01-23 01:08:30] [INFO] [CypherUtility] Generating new keystore at: rskeystore.p12
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Keystore generated successfully
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] ✓ Keystore generated successfully: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
+[2026-01-23 01:08:31] [INFO] [RsLockConfig] Validating configuration...
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] Source files: 1
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Loading public key for alias: hello
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 12:42:32 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 12:42:32 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore not found, generating new keystore...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore generated successfully: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: output_data
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Available aliases: [rslock-key]
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using alias: rslock-key
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] [1/1] Processing: test1.txt
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Generating new AES key (Size: 256 bits)
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Generating new Initialization Vector (IV)
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Encrypting AES key with RSA public key
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:08:31] [INFO] [CypherUtility] Writing encryption header: IV_Length=16, Encrypted_Key_Length=256
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor]      ✓ Encrypted successfully
 
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test1.txt
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 36.00 B
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 328.00 B
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test1.txt.rslocked
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 01:08:31] [INFO] [RsfileEncryptor] Total files encrypted: 1
+[2026-01-23 01:21:22] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:21:22] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 12:42:33 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
-Jan 22, 2026 12:44:30 AM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 12:44:30 AM com.rslock.common.RsLogger init
-INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:21:22] [INFO] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 01:21:22] [INFO] [RsLockConfig] Validating configuration...
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] Source files: 1
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:21:22] [INFO] [CypherUtility] Loading public key for alias: hello
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: output_data
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Available aliases: [rslock-key]
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using alias: rslock-key
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] [1/1] Processing: test1.txt
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:21:22] [INFO] [CypherUtility]      Generating new AES key (Size: 256 bits)
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:21:22] [INFO] [CypherUtility]      Generating new Initialization Vector (IV)
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:21:22] [INFO] [CypherUtility]      Encrypting AES key with RSA public key
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:21:22] [INFO] [CypherUtility]      Writing encryption header: IV_Length=16, Encrypted_Key_Length=256
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor]      ✓ Encrypted successfully
 
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test1.txt
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 81.00 B
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 376.00 B
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test1.txt.rslocked
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 01:21:22] [INFO] [RsfileEncryptor] Total files encrypted: 1
+[2026-01-23 01:22:59] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:22:59] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 12:44:30 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
-Jan 22, 2026 12:45:12 AM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 12:45:12 AM com.rslock.common.RsLogger init
-INFO: Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:22:59] [INFO] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 01:22:59] [INFO] [RsLockConfig] Validating configuration...
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] Source files: 1
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:22:59] [INFO] [CypherUtility] Loading public key for alias: hello
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using default keystore: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: output_data
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Available aliases: [rslock-key]
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Using alias: rslock-key
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] [1/1] Processing: test1.txt
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:22:59] [INFO] [CypherUtility]      Generating new AES key (Size: 256 bits)
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:22:59] [INFO] [CypherUtility]      Generating new Initialization Vector (IV)
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:22:59] [INFO] [CypherUtility]      Encrypting AES key with RSA public key
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:22:59] [INFO] [CypherUtility]      Writing encryption header: IV_Length=16, Encrypted_Key_Length=256
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor]      ✓ Encrypted successfully
 
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test1.txt
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 81.00 B
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 376.00 B
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test1.txt.rslocked
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 01:22:59] [INFO] [RsfileEncryptor] Total files encrypted: 1
+[2026-01-23 01:27:07] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:27:07] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 12:45:12 AM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
-Jan 22, 2026 5:01:15 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:01:15 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:27:07] [INFO] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 01:27:07] [INFO] [RsLockConfig] Validating configuration...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] Source files: 1
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: test_data/output
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 5:01:15 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 5:02:14 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:02:14 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:02:14 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] [1/1] Processing: test1.txt
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor]      ✓ Encrypted successfully
 
-Jan 22, 2026 5:16:30 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:16:30 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:16:30 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 01:27:07] [INFO] [RsfileEncryptor] Total files encrypted: 1
+[2026-01-23 01:37:09] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:37:09] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 5:16:53 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:16:53 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:16:53 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 5:17:29 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:17:29 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:17:29 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Creating thread pool with 2 threads for parallel processing
 
-Jan 22, 2026 5:17:29 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore not found, generating new keystore...
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore generated successfully: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: test_data/output
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 5:17:31 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 5:17:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 5:18:36 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:18:36 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Waiting for all encryption tasks to complete...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] [1/2] [pool-1-thread-1] Processing: test1.txt
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] [2/2] [pool-1-thread-2] Processing: test2.txt
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Source size: 37.00 B
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Output size: 328.00 B
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Output file: test2.txt.rslocked
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] [2/2] [pool-1-thread-2] ✓ Encrypted successfully
 
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: test_data/output
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 5:18:36 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] [1/2] [pool-1-thread-1] ✓ Encrypted successfully
 
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test1.txt
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 3.06 KB
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 3.34 KB
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test1.txt.rslocked
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] 
+=== Encryption Complete ===
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Total files encrypted: 2
+[2026-01-23 01:37:09] [INFO] [RsfileEncryptor] Thread pool size used: 2
+[2026-01-23 01:38:56] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:38:56] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 5:18:37 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
-Jan 22, 2026 5:35:04 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:35:04 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:35:04 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 5:35:04 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore not found, generating new keystore...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore generated successfully: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test1.txt
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: test_data/output
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Creating thread pool with 2 threads for parallel processing
 
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test1.txt
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 3.06 KB
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 3.34 KB
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test1.txt.rslocked
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Waiting for all encryption tasks to complete...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] [1/2] [pool-1-thread-2] Processing: test2.txt
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] [2/2] [pool-1-thread-1] Processing: test1.txt
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Source size: 3.06 KB
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Source size: 37.00 B
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Generating IV...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Output size: 328.00 B
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Output file: test2.txt.rslocked
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] [1/2] [pool-1-thread-2] ✓ Encrypted successfully
 
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 5:35:08 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
-Jan 22, 2026 5:41:31 PM com.rslock.common.RsLogger init
-INFO: Logging initialized
-Jan 22, 2026 5:41:32 PM com.rslock.common.RsLogger init
-INFO: Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor.log
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === RSLock File Encryptor ===
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] [2/2] [pool-1-thread-1] ✓ Encrypted successfully
 
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Source files: 1
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:   - test2.txt
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Destination: test_data/output
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Keystore: rskeystore.p12
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Loading keystore...
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Keystore loaded
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: ✓ Public key loaded
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] 
+=== Encryption Complete ===
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Total files encrypted: 2
+[2026-01-23 01:38:56] [INFO] [RsfileEncryptor] Thread pool size used: 2
+[2026-01-23 01:51:04] [INFO] [RsLogger] Logging initialized
+[2026-01-23 01:51:04] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
 
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: [1/1] Processing: test2.txt
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Source size: 37.00 B
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating AES key...
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Generating IV...
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting AES key with RSA...
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Encrypting file data...
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output size: 328.00 B
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor encryptFile
-INFO:      Output file: test2.txt.rslocked
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO:      ✓ Encrypted successfully
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] ✓ Public key loaded
 
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: === Encryption Complete ===
-Jan 22, 2026 5:41:32 PM com.rslock.encryptor.RsfileEncryptor main
-INFO: Total files encrypted: 1
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Encrypting 2 file(s) in parallel...
+
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] ✓ test2.txt → test2.txt.rslocked (328.00 B)
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Total files encrypted: 2
+[2026-01-23 01:51:04] [INFO] [RsfileEncryptor] Thread pool size used: 2
+[2026-01-23 02:11:54] [INFO] [RsLogger] Logging initialized
+[2026-01-23 02:11:55] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
+
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] ✓ Public key loaded
+
+[2026-01-23 02:11:55] [INFO] [ParallelFileEncryptor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 02:11:55] [INFO] [ParallelFileEncryptor] Encrypting 2 file(s) in parallel...
+
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] ✓ test2.txt → test2.txt.rslocked (328.00 B)
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Total files encrypted: 2/2
+[2026-01-23 02:11:55] [INFO] [RsfileEncryptor] Thread pool size used: 2
+[2026-01-23 02:30:08] [INFO] [RsLogger] Logging initialized
+[2026-01-23 02:30:08] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
+
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] ✓ Public key loaded
+
+[2026-01-23 02:30:08] [INFO] [ParallelFileExecutor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 02:30:08] [INFO] [ParallelFileExecutor] Processing 2 file(s) in parallel...
+
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] === Encryption Complete ===
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] ✓ test2.txt → test2.txt.rslocked (328.00 B)
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Total files encrypted: 2/2
+[2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Thread pool size used: 2

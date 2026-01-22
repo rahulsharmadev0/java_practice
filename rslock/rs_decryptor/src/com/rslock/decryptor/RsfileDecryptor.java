@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.PrivateKey;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,9 +16,12 @@ import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
 
+/**
+ * Main entry point for RSLock file decryption.
+ * Responsibility: Coordinate the decryption workflow and define decryption
+ * logic
+ */
 public class RsfileDecryptor {
-
-    private static final int BUFFER_SIZE = 8192;
 
     private static final String LOG_FILENAME = "rslock-decryptor.log";
 
@@ -28,7 +30,7 @@ public class RsfileDecryptor {
     public static void main(String[] args) throws Exception {
         RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
 
-        LOG.info(() -> "=== RSLock File Decryptor ===\n");
+        LOG.info("=== RSLock File Decryptor ===\n");
 
         // Parse command line arguments
         RsLockConfig config = RsLockConfig.fromArgs(args);
@@ -38,82 +40,69 @@ public class RsfileDecryptor {
         List<Path> sourceFiles = config.getSourceFiles();
         Path keystorePath = config.getKeystorePath();
 
-        final Path finalKeystorePath2 = keystorePath;
-
-        LOG.info(() -> "Source files: " + sourceFiles.size());
+        LOG.info("Source files: " + sourceFiles.size());
         for (Path src : sourceFiles) {
-            LOG.info(() -> "  - " + src.getFileName());
+            LOG.info("  - " + src.getFileName());
         }
- 
-        LOG.info(() -> "Keystore: " + finalKeystorePath2.toString());
+
+        LOG.info("Keystore: " + config.getKeystorePath());
 
         // Load keystore and keys
-        LOG.info(() -> "Loading keystore...");
+        LOG.info("Loading keystore...");
         KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
-        try (InputStream keystoreInput = Files.newInputStream(finalKeystorePath2)) {
+        try (InputStream keystoreInput = Files.newInputStream(keystorePath)) {
             keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
         }
 
-        LOG.info(() -> "✓ Keystore loaded");
+        LOG.info("✓ Keystore loaded");
 
         PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, config.getAlias(),
                 RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
 
+        LOG.info("✓ Private key loaded\n");
 
-        LOG.info(() -> "✓ Private key loaded\n");
+        // Use generic ParallelFileExecutor with decryption task
+        final PrivateKey finalPrivateKey = privateKey;
+        final RsLockConfig finalConfig = config;
 
-        // Process each source file sequentially
-        int totalFiles = sourceFiles.size();
-        int processedFiles = 0; // for logging only
+        ExecutionResult result = ParallelFileExecutor.executeInParallel(
+                sourceFiles,
+                null, // destinationDir determined per file
+                (sourceFile, destDir) -> decryptFile(sourceFile, finalConfig.generateDestinationDir(sourceFile),
+                        finalPrivateKey));
 
-        for (Path sourceFile : sourceFiles) {
-            processedFiles++;
-            final int currentFile = processedFiles; // for logging only
-            LOG.info(() -> "[" + currentFile + "/" + totalFiles + "] Processing: " + sourceFile.getFileName());
-
-            try {
-                decryptFile(sourceFile, config.generateDestinationDir(sourceFile), privateKey);
-                LOG.info(() -> "     ✓ Decrypted successfully\n");
-            } catch (Exception e) {
-                LOG.warning("     ✗ Error: " + e.getMessage());
-                throw new RuntimeException("Failed to decrypt: " + sourceFile, e);
-            }
-        }
-
-        final int finalProcessedFiles = processedFiles;
-        LOG.info(() -> "=== Decryption Complete ===");
-        LOG.info(() -> "Total files decrypted: " + finalProcessedFiles);
+        // Print clean summary
+        printSummary(result);
     }
 
     /**
-     * Decrypts a single file using hybrid decryption:
-     * - Reads encrypted AES key and IV from file header
-     * - Decrypts AES key with RSA private key
-     * - Decrypts file data with AES-CBC
-     * - Restores original file without .rslocked extension
+     * Decrypts a single file using hybrid decryption.
+     * This is the actual decryption logic specific to this decryptor.
      */
-    private static void decryptFile(Path sourceFile, Path destinationDir, PrivateKey privateKey)
+    private static FileResult decryptFile(Path sourceFile, Path destinationDir, PrivateKey privateKey)
             throws Exception {
 
         // Validate input file has .rslocked extension
         String fileName = sourceFile.getFileName().toString();
-        if (!fileName.endsWith(".rslocked")) {
-            throw new IllegalArgumentException("File must have .rslocked extension: " + fileName);
+        if (!fileName.endsWith(RsConstraints.DEFAULT_ENCRYPTED_FILE_EXTENSION)) {
+            throw new IllegalArgumentException(
+                    "File must have " + RsConstraints.DEFAULT_ENCRYPTED_FILE_EXTENSION + " extension: " + fileName);
         }
 
         // Generate output file path by removing .rslocked extension
-        String outputFileName = fileName.substring(0, fileName.length() - ".rslocked".length());
+        String outputFileName = fileName.substring(0,
+                fileName.length() - RsConstraints.DEFAULT_ENCRYPTED_FILE_EXTENSION.length());
         Path outputFile = destinationDir.resolve(outputFileName);
 
         long fileSize = Files.size(sourceFile);
-        LOG.info(() -> "     Encrypted size: " + Utility.formatBytes(fileSize));
+        LOG.fine("     Encrypted size: " + Utility.formatBytes(fileSize));
 
         // Decrypt the file
         try (InputStream fileInput = Files.newInputStream(sourceFile)) {
 
             // Read header: IV and encrypted AES key
-            LOG.info(() -> "     Reading encryption header...");
+            LOG.fine("     Reading encryption header...");
             byte[][] header = CypherUtility.readEncryptionHeader(fileInput);
             byte[] ivBytes = header[0];
             byte[] encryptedAESKey = header[1];
@@ -121,16 +110,16 @@ public class RsfileDecryptor {
             IvParameterSpec iv = new IvParameterSpec(ivBytes);
 
             // Decrypt the AES key with RSA private key
-            LOG.info(() -> "     Decrypting AES key with RSA...");
+            LOG.fine("     Decrypting AES key with RSA...");
             SecretKey aesKey = CypherUtility.decryptAESKeyWithRSA(encryptedAESKey, privateKey);
 
             // Decrypt the file data
-            LOG.info(() -> "     Decrypting file data...");
+            LOG.fine("     Decrypting file data...");
             try (CipherInputStream cipherInput = CypherUtility.createDecryptStream(fileInput, aesKey, iv);
                     OutputStream fileOutput = Files.newOutputStream(outputFile)) {
 
                 long bytesCopied = 0;
-                byte[] buffer = new byte[BUFFER_SIZE];
+                byte[] buffer = new byte[RsConstraints.DEFAULT_BUFFER_SIZE];
                 int bytesRead;
                 int lastProgressPercent = 0;
 
@@ -152,8 +141,28 @@ public class RsfileDecryptor {
 
         long decryptedSize = Files.size(outputFile);
 
-        LOG.info(() -> "     Output size: " + Utility.formatBytes(decryptedSize));
-        LOG.info(() -> "     Output file: " + outputFile.getFileName());
+        LOG.fine("     Output size: " + Utility.formatBytes(decryptedSize));
+        LOG.fine("     Output file: " + outputFile.getFileName());
+
+        return new FileResult(sourceFile.getFileName().toString(), outputFileName, decryptedSize);
     }
 
+    /**
+     * Prints a clean summary of decryption results
+     */
+    private static void printSummary(ExecutionResult result) {
+        LOG.info("=== Decryption Complete ===");
+
+        for (FileResult fileResult : result.getFileResults()) {
+            if (fileResult.isSuccess()) {
+                LOG.info("✓ " + fileResult.getSourceFileName() + " → " + fileResult.getOutputFileName() +
+                        " (" + Utility.formatBytes(fileResult.getOutputSize()) + ")");
+            } else {
+                LOG.warning("✗ " + fileResult.getSourceFileName() + " (Error: " + fileResult.getErrorMessage() + ")");
+            }
+        }
+
+        LOG.info("Total files decrypted: " + result.getSuccessCount() + "/" + result.getTotalFiles());
+        LOG.info("Thread pool size used: " + result.getThreadPoolSize());
+    }
 }

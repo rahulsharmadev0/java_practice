@@ -9,10 +9,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class RsLogger {
-	private RsLogger() {}
+	private RsLogger() {
+	}
 
 	public static void init(String logFileName, Level consoleLevel, Level fileLevel) {
 		try {
@@ -31,7 +31,7 @@ public class RsLogger {
 			Path logPath = Path.of(logFileName).toAbsolutePath();
 			FileHandler file = new FileHandler(logPath.toString(), true);
 			file.setLevel(fileLevel);
-			file.setFormatter(new SimpleFormatter());
+			file.setFormatter(new RsFileFormatter());
 
 			root.addHandler(file);
 			root.addHandler(console);
@@ -42,13 +42,26 @@ public class RsLogger {
 		}
 
 	}
-	
-	static class RsConsoleFormatter extends Formatter{
+
+	static class RsConsoleFormatter extends Formatter {
 		@Override
 		public String format(LogRecord log) {
-			return log.getMessage()+ System.lineSeparator();
+			return log.getMessage() + System.lineSeparator();
 		}
-		
+
+	}
+
+	static class RsFileFormatter extends Formatter {
+		@Override
+		public String format(LogRecord record) {
+			return String.format("[%1$tF %1$tT] [%2$s] [%3$s] %4$s%n",
+					record.getMillis(),
+					record.getLevel().getLocalizedName(),
+					record.getSourceClassName() != null
+							? record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.') + 1)
+							: "Unknown",
+					formatMessage(record));
+		}
 	}
 
 }
