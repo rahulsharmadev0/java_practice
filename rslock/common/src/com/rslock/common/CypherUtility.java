@@ -35,6 +35,7 @@ public final class CypherUtility {
 	/**
 	 * Generate a new AES key with the specified key size
 	 */
+	@Loggable(level = LogLevel.FINE)
 	public static SecretKey generateAESKey() throws NoSuchAlgorithmException {
 		KeyGenerator keyGenerator = KeyGenerator.getInstance(RsConstraints.AES_ALGORITHM);
 		keyGenerator.init(RsConstraints.AES_KEY_SIZE);
@@ -54,6 +55,7 @@ public final class CypherUtility {
 	/**
 	 * Encrypt AES key using RSA public key
 	 */
+	@Loggable(level = LogLevel.FINE)
 	public static byte[] encryptAESKeyWithRSA(SecretKey aesKey, PublicKey publicKey) throws Exception {
 		Cipher cipher = Cipher.getInstance(RsConstraints.RSA_TRANSFORMATION);
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -63,6 +65,7 @@ public final class CypherUtility {
 	/**
 	 * Decrypt AES key using RSA private key
 	 */
+	@Loggable(level = LogLevel.FINE)
 	public static SecretKey decryptAESKeyWithRSA(byte[] encryptedKey, PrivateKey privateKey) throws Exception {
 		Cipher cipher = Cipher.getInstance(RsConstraints.RSA_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE, privateKey);

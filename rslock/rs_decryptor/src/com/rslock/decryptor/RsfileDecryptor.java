@@ -26,7 +26,7 @@ public class RsfileDecryptor {
     private static final Logger LOG = Logger.getLogger(RsfileDecryptor.class.getName());
 
     public static void main(String[] args) throws Exception {
-        RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
+        RsLogger.init(LOG_FILENAME, Level.FINE, Level.FINE);
 
         LOG.info(() -> "=== RSLock File Decryptor ===\n");
 
@@ -93,6 +93,7 @@ public class RsfileDecryptor {
      * - Decrypts file data with AES-CBC
      * - Restores original file without .rslocked extension
      */
+    @Loggable(level = LogLevel.FINE, includePerformanceMetrics = true)
     private static void decryptFile(Path sourceFile, Path destinationDir, PrivateKey privateKey)
             throws Exception {
 
@@ -106,54 +107,48 @@ public class RsfileDecryptor {
         String outputFileName = fileName.substring(0, fileName.length() - ".rslocked".length());
         Path outputFile = destinationDir.resolve(outputFileName);
 
-        long fileSize = Files.size(sourceFile);
-        LOG.info(() -> "     Encrypted size: " + Utility.formatBytes(fileSize));
+        long sourceSize = Files.size(sourceFile);
+        LOG.fine(() -> "Source: " + sourceFile.getFileName() + " (" + Utility.formatBytes(sourceSize) + ")");
 
         // Decrypt the file
         try (InputStream fileInput = Files.newInputStream(sourceFile)) {
 
             // Read header: IV and encrypted AES key
-            LOG.info(() -> "     Reading encryption header...");
+            LOG.fine("Reading encryption header...");
             byte[][] header = CypherUtility.readEncryptionHeader(fileInput);
             byte[] ivBytes = header[0];
             byte[] encryptedAESKey = header[1];
+            LOG.fine(() -> "✓ Header read (IV: " + ivBytes.length + " bytes, Encrypted Key: " + encryptedAESKey.length + " bytes)");
 
             IvParameterSpec iv = new IvParameterSpec(ivBytes);
 
             // Decrypt the AES key with RSA private key
-            LOG.info(() -> "     Decrypting AES key with RSA...");
+            LOG.fine("Decrypting AES key with RSA...");
             SecretKey aesKey = CypherUtility.decryptAESKeyWithRSA(encryptedAESKey, privateKey);
+            LOG.fine("✓ AES key decrypted");
 
             // Decrypt the file data
-            LOG.info(() -> "     Decrypting file data...");
+            LOG.fine("Starting file decryption with AES-256-CBC...");
             try (CipherInputStream cipherInput = CypherUtility.createDecryptStream(fileInput, aesKey, iv);
                     OutputStream fileOutput = Files.newOutputStream(outputFile)) {
 
-                long bytesCopied = 0;
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytesRead;
-                int lastProgressPercent = 0;
+                long totalBytes = 0;
 
                 while ((bytesRead = cipherInput.read(buffer)) != -1) {
                     fileOutput.write(buffer, 0, bytesRead);
-                    bytesCopied += bytesRead;
-
-                    // Show progress percentage (approximate since we don't know decrypted size)
-                    int progressPercent = (int) ((bytesCopied * 100) / fileSize);
-                    if (progressPercent > lastProgressPercent && progressPercent % 10 == 0) {
-                        LOG.fine("     Progress: " + progressPercent + "%");
-                        lastProgressPercent = progressPercent;
-                    }
+                    totalBytes += bytesRead;
                 }
 
                 fileOutput.flush();
+                final long finalBytes = totalBytes;
+                LOG.fine(() -> "✓ File decrypted: " + finalBytes + " bytes recovered");
             }
         }
 
         long decryptedSize = Files.size(outputFile);
-
-        LOG.info(() -> "     Output size: " + Utility.formatBytes(decryptedSize));
-        LOG.info(() -> "     Output file: " + outputFile.getFileName());
+        LOG.fine(() -> "Output: " + outputFile.getFileName() + " (" + Utility.formatBytes(decryptedSize) + ")");
     }
 
 }

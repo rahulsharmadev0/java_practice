@@ -23,7 +23,7 @@ public class RsfileEncryptor {
 	private static final Logger LOG = Logger.getLogger(RsfileEncryptor.class.getName());
 
 	public static void main(String[] args) throws Exception {
-		RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
+		RsLogger.init(LOG_FILENAME, Level.FINE, Level.FINE);
 
 		LOG.info(() -> "=== RSLock File Encryptor ===\n");
 
@@ -114,6 +114,7 @@ public class RsfileEncryptor {
 	 * - Encrypts AES key with RSA public key
 	 * - Stores encrypted key + IV + encrypted data in .rslocked file
 	 */
+	@Loggable(level = LogLevel.FINE, includePerformanceMetrics = true)
 	private static void encryptFile(Path sourceFile, Path destinationDir, PublicKey publicKey)
 			throws Exception {
 
@@ -121,23 +122,23 @@ public class RsfileEncryptor {
 		String outputFileName = sourceFile.getFileName().toString() + ".rslocked";
 		Path outputFile = destinationDir.resolve(outputFileName);
 
-		long fileSize = Files.size(sourceFile);
-		LOG.info(() -> "     Source size: " + Utility.formatBytes(fileSize));
+		long sourceSize = Files.size(sourceFile);
+		LOG.fine(() -> "Source: " + sourceFile.getFileName() + " (" + Utility.formatBytes(sourceSize) + ")");
 
 		// Generate unique AES key for this file
-		LOG.info(() -> "     Generating AES key...");
 		SecretKey aesKey = CypherUtility.generateAESKey();
+		LOG.fine("✓ AES-256 key generated");
 
 		// Generate unique IV for this file
-		LOG.info(() -> "     Generating IV...");
 		IvParameterSpec iv = CypherUtility.generateIV();
+		LOG.fine("✓ IV generated");
 
 		// Encrypt the AES key with RSA public key
-		LOG.info(() -> "     Encrypting AES key with RSA...");
 		byte[] encryptedAESKey = CypherUtility.encryptAESKeyWithRSA(aesKey, publicKey);
+		LOG.fine(() -> "✓ AES key encrypted with RSA (size: " + encryptedAESKey.length + " bytes)");
 
 		// Encrypt the file
-		LOG.info(() -> "     Encrypting file data...");
+		LOG.fine("Starting file encryption with AES-256-CBC...");
 		try (InputStream fileInput = Files.newInputStream(sourceFile);
 				OutputStream fileOutput = Files.newOutputStream(outputFile)) {
 
@@ -146,31 +147,23 @@ public class RsfileEncryptor {
 
 			// Write encrypted file data
 			try (CipherOutputStream cipherOutput = CypherUtility.createEncryptStream(fileOutput, aesKey, iv)) {
-				long bytesCopied = 0;
 				byte[] buffer = new byte[RsConstraints.DEFAULT_BUFFER_SIZE];
 				int bytesRead;
-				int lastProgressPercent = 0;
+				long totalBytes = 0;
 
 				while ((bytesRead = fileInput.read(buffer)) != -1) {
 					cipherOutput.write(buffer, 0, bytesRead);
-					bytesCopied += bytesRead;
-
-					// Show progress percentage
-					int progressPercent = (int) ((bytesCopied * 100) / fileSize);
-					if (progressPercent > lastProgressPercent && progressPercent % 10 == 0) {
-						LOG.fine("     Progress: " + progressPercent + "%");
-						lastProgressPercent = progressPercent;
-					}
+					totalBytes += bytesRead;
 				}
 
 				cipherOutput.flush();
+				final long finalBytes = totalBytes;
+				LOG.fine(() -> "✓ File encrypted: " + finalBytes + " bytes processed");
 			}
 		}
 
 		long encryptedSize = Files.size(outputFile);
-
-		LOG.info(() -> "     Output size: " + Utility.formatBytes(encryptedSize));
-		LOG.info(() -> "     Output file: " + outputFile.getFileName());
+		LOG.fine(() -> "Output: " + outputFile.getFileName() + " (" + Utility.formatBytes(encryptedSize) + ")");
 	}
 
 }
