@@ -1,1 +1,22 @@
 
+# Compile the common module
+javac -d common/bin -p common/lib common/src/module-info.java common/src/com/rslock/common/*.java
+
+# Compile the encryptor
+javac -d rs_encryptor/bin --module-path common/bin:common/lib rs_encryptor/src/module-info.java rs_encryptor/src/com/rslock/encryptor/*.java
+
+# Compile the decryptor
+javac -d rs_decryptor/bin --module-path common/bin:common/lib rs_decryptor/src/module-info.java rs_decryptor/src/com/rslock/decryptor/*.java
+
+
+# 1. Encrypt a file
+java --module-path common/bin:common/lib:rs_encryptor/bin \
+  -m rslock.encryptor/com.rslock.encryptor.RsfileEncryptor \
+  -s test_data/test1.txt -d test_data/output -a hello
+
+# 2. Decrypt the encrypted file
+java --module-path common/bin:common/lib:rs_decryptor/bin \
+  -m rslock.decryptor/com.rslock.decryptor.RsfileDecryptor \
+  -s test_data/output/test1.txt.rslocked -a hello
+
+diff -u test_data/test1.txt test_data/output/test1.txt && echo "✓ Files are identical - decryption successful!"

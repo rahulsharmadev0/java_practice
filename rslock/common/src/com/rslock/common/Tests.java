@@ -16,7 +16,7 @@ public final class Tests {
         System.out.println("Test Case 1: Multiple source files");
         String[] args = { "-s", "My Folder\\file.txt, My Folder\\file2.txt" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {
@@ -29,7 +29,7 @@ public final class Tests {
         System.out.println("Test Case 2: Single source file");
         String[] args = { "-s", "My Folder\\file.txt" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public final class Tests {
         System.out.println("Test Case 3: Single source file with destination");
         String[] args = { "-s", "My Folder\\file.txt", "-d", "SomePath\\" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {
@@ -55,7 +55,7 @@ public final class Tests {
         System.out.println("Test Case 4: All flags (source + destination + keystore)");
         String[] args = { "-s", "My Folder\\file.txt", "-d", "SomePath\\", "-k", "rskeystore.p12" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public final class Tests {
         System.out.println("Test Case 5: Multiple files with all flags");
         String[] args = { "-s", "file1.txt, file2.txt", "-d", "output/", "-k", "keystore.p12" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public final class Tests {
         System.out.println("Test Case 6: Error handling - value without flag");
         String[] args = { "invalid_value", "-s", "file.txt" };
         try {
-            RsCommandLineArgs parsed = RsCommandLineArgs.parse(args);
+            RsLockConfig parsed = RsLockConfig.fromArgs(args);
             System.out.println("  " + parsed);
             System.out.println("  PASS\n");
         } catch (Exception e) {

@@ -31,73 +31,49 @@ public class RsfileDecryptor {
         LOG.info(() -> "=== RSLock File Decryptor ===\n");
 
         // Parse command line arguments
-        RsCommandLineArgs cmdArgs = RsCommandLineArgs.parse(args);
+        RsLockConfig config = RsLockConfig.fromArgs(args);
 
-        List<Path> sourceFiles = cmdArgs.getSourceFiles();
-        Path destinationDir = cmdArgs.getDestinationDir();
-        Path keystorePath = cmdArgs.getKeystorePath();
+        config.validate();
 
-        // Default destination to source file's directory if not provided
-        if (destinationDir == null && !sourceFiles.isEmpty()) {
-            destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
-            final Path finalDestDir = destinationDir;
-            LOG.info(() -> "Using default destination: " + finalDestDir);
-        }
+        List<Path> sourceFiles = config.getSourceFiles();
+        Path keystorePath = config.getKeystorePath();
 
-        // Default keystore path if not provided
-        if (keystorePath == null) {
-            keystorePath = Path.of(CypherConstraints.DEFAULT_KEYSTORE_FILENAME);
-            final Path finalKeystorePath = keystorePath;
-            LOG.info(() -> "Using default keystore: " + finalKeystorePath.toAbsolutePath());
-        }
-
-        final Path finalDestinationDir = destinationDir;
         final Path finalKeystorePath2 = keystorePath;
 
         LOG.info(() -> "Source files: " + sourceFiles.size());
         for (Path src : sourceFiles) {
             LOG.info(() -> "  - " + src.getFileName());
         }
-        LOG.info(() -> "Destination: " + finalDestinationDir.toString());
+ 
         LOG.info(() -> "Keystore: " + finalKeystorePath2.toString());
-
-        // Get keystore password securely
-        char[] keystorePassword = getKeystorePassword();
 
         // Load keystore and keys
         LOG.info(() -> "Loading keystore...");
-        KeyStore keystore = KeyStore.getInstance(CypherConstraints.KEYSTORE_TYPE);
+        KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
         try (InputStream keystoreInput = Files.newInputStream(finalKeystorePath2)) {
-            keystore.load(keystoreInput, keystorePassword);
+            keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
         }
 
         LOG.info(() -> "✓ Keystore loaded");
-        String alias;
-        try {
-            List<String> aliasList = Collections.list(keystore.aliases());
-            LOG.info(() -> "Available aliases: " + aliasList);
-            alias = aliasList.get(0);
-        } catch (Exception e) {
-            LOG.warning("Could not list aliases: " + e.getMessage());
-            throw new RuntimeException("Failed to get keystore alias", e);
-        }
-        LOG.info(() -> "Using alias: " + alias);
 
-        PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, alias, keystorePassword);
+        PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, config.getAlias(),
+                RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
+
+
         LOG.info(() -> "✓ Private key loaded\n");
 
         // Process each source file sequentially
         int totalFiles = sourceFiles.size();
-        int processedFiles = 0;
+        int processedFiles = 0; // for logging only
 
         for (Path sourceFile : sourceFiles) {
             processedFiles++;
-            final int currentFile = processedFiles;
+            final int currentFile = processedFiles; // for logging only
             LOG.info(() -> "[" + currentFile + "/" + totalFiles + "] Processing: " + sourceFile.getFileName());
 
             try {
-                decryptFile(sourceFile, finalDestinationDir, privateKey);
+                decryptFile(sourceFile, config.generateDestinationDir(sourceFile), privateKey);
                 LOG.info(() -> "     ✓ Decrypted successfully\n");
             } catch (Exception e) {
                 LOG.warning("     ✗ Error: " + e.getMessage());
@@ -178,20 +154,6 @@ public class RsfileDecryptor {
 
         LOG.info(() -> "     Output size: " + Utility.formatBytes(decryptedSize));
         LOG.info(() -> "     Output file: " + outputFile.getFileName());
-    }
-
-    /**
-     * Get keystore password securely from console or use default for demo
-     */
-    private static char[] getKeystorePassword() {
-        // TODO: In production, use Console for secure password input:
-        // Console console = System.console();
-        // if (console != null) {
-        // return console.readPassword("Enter keystore password: ");
-        // }
-
-        // For demo purposes only
-        return "password".toCharArray();
     }
 
 }

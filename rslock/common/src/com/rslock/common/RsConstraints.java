@@ -1,9 +1,9 @@
 package com.rslock.common;
 
-public final class CypherConstraints {
+public final class RsConstraints {
 
 	// Prevent instantiation
-	private CypherConstraints() {
+	private RsConstraints() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
@@ -20,9 +20,16 @@ public final class CypherConstraints {
 	// KeyStore Constraints
 	public static final String KEYSTORE_TYPE = "PKCS12";
 	public static final String KEYSTORE_PROVIDER = "BC"; // Bouncy Castle
+	public static final String DEFAULT_KEYSTORE_ALIAS = "rslock-key";
 	public static final String DEFAULT_KEYSTORE_FILENAME = "rskeystore.p12";
+	public static final char[] DEFAULT_KEYSTORE_PASSWORD = "rslock-password".toCharArray();
+
+	// Buffer size for file streams operations
+	public static final int DEFAULT_BUFFER_SIZE = 8192;
 
 	// Encryption Constraints
 	public static final int IV_SIZE = 16; // bytes (128 bits for AES)
+
+	
 
 }

@@ -1,22 +1,29 @@
 package com.rslock.common;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RsCommandLineArgs {
-
+public class RsLockConfig {
 	private final List<Path> sourceFiles;
 	private final Path destinationDir;
 	private final Path keystorePath;
+	private final String alias;
 
-	public RsCommandLineArgs(List<Path> sourceFiles, Path destinationDir, Path keystorePath) {
+	public RsLockConfig(List<Path> sourceFiles, Path destinationDir, Path keystorePath, String alias) {
 		this.sourceFiles = sourceFiles;
 		this.destinationDir = destinationDir;
 		this.keystorePath = keystorePath;
+		this.alias = alias;
 	}
 
-	private void validate() {
+	// Ensure all required parameters are present
+	public void validate() {
+		if (sourceFiles == null || sourceFiles.isEmpty()) {
+			throw new IllegalArgumentException("At least one source file must be specified.");
+		}
+
 		// Validate source files exist
 		for (Path source : sourceFiles) {
 			Path normalized = source.toAbsolutePath().normalize();
@@ -26,15 +33,23 @@ public class RsCommandLineArgs {
 			}
 		}
 
-		// Validate destination directory exists (if provided)
-		if (destinationDir != null && !Files.exists(destinationDir)) {
-			throw new IllegalArgumentException("Destination directory does not exist: " + destinationDir);
+		if (destinationDir != null) {
+			if (!Files.exists(destinationDir)) {
+				throw new IllegalArgumentException("Destination directory does not exist: " + destinationDir);
+			}
+			if (!Files.isDirectory(destinationDir)) {
+				throw new IllegalArgumentException("Destination must be a directory: " + destinationDir);
+			}
 		}
 
 		// Validate keystore path exists (if provided)
 		if (keystorePath != null && !Files.exists(keystorePath)) {
 			throw new IllegalArgumentException("Keystore file does not exist: " + keystorePath);
 		}
+	}
+
+	public int getSourceFileCount() {
+		return sourceFiles.size();
 	}
 
 	public List<Path> getSourceFiles() {
@@ -49,21 +64,34 @@ public class RsCommandLineArgs {
 		return keystorePath;
 	}
 
+	public String getAlias() {
+		return alias;
+	}
+
+	// Generate destination directory for a given source file
+	// so, that if destinationDir is null, it returns the source file's parent directory
+	public Path generateDestinationDir(Path sourceFile) {
+		return destinationDir != null ? destinationDir : sourceFile.toAbsolutePath().getParent();
+	}
+
 	@Override
 	public String toString() {
-		return "RsCommandLineArgs{" +
+		return "RsLockConfig{" + // Updated name here
 				"sourceFiles=" + sourceFiles +
 				", destinationDir=" + destinationDir +
 				", keystorePath=" + keystorePath +
+				", alias='" + alias + '\'' + // Added alias to toString
 				'}';
 	}
 
-	public static RsCommandLineArgs parse(String[] args) {
-
+	// Use this method to parse command line arguments
+	public static RsLockConfig fromArgs(String[] args)
+			throws IllegalArgumentException {
 		List<Path> sources = new ArrayList<>();
 		Path destination = null;
 		Path keystore = null;
 		Flag currentFlag = null;
+		String alias = null;
 
 		for (String arg : args) {
 			Flag detected = Flag.parser(arg);
@@ -92,19 +120,33 @@ public class RsCommandLineArgs {
 					keystore = Path.of(arg);
 					currentFlag = null;
 				}
+				case alias -> {
+					alias = arg;
+					currentFlag = null;
+				}
 			}
 
 		}
 
-		RsCommandLineArgs commandLineArgs = new RsCommandLineArgs(sources, destination, keystore);
-		commandLineArgs.validate();
+		// Use Default parameter if not provided
+		if (alias == null || alias.isEmpty())
+			alias = RsConstraints.DEFAULT_KEYSTORE_ALIAS;
+
+		if (keystore == null) {
+			keystore = Path.of(RsConstraints.DEFAULT_KEYSTORE_FILENAME);
+		}
+		RsLockConfig commandLineArgs = new RsLockConfig(sources, destination, keystore, alias);
 		return commandLineArgs;
 
 	}
 
+	public boolean isKeystoreExists() {
+		return keystorePath != null && Files.exists(keystorePath);
+	}
+
 	/// --------
 	enum Flag {
-		SOURCE("-s"), DESTINATION("-d"), KEYSTORE("-k");
+		SOURCE("-s"), DESTINATION("-d"), KEYSTORE("-k"), alias("-a");
 
 		final String token;
 

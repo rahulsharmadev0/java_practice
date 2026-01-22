@@ -36,8 +36,8 @@ public final class CypherUtility {
 	 * Generate a new AES key with the specified key size
 	 */
 	public static SecretKey generateAESKey() throws NoSuchAlgorithmException {
-		KeyGenerator keyGenerator = KeyGenerator.getInstance(CypherConstraints.AES_ALGORITHM);
-		keyGenerator.init(CypherConstraints.AES_KEY_SIZE);
+		KeyGenerator keyGenerator = KeyGenerator.getInstance(RsConstraints.AES_ALGORITHM);
+		keyGenerator.init(RsConstraints.AES_KEY_SIZE);
 		return keyGenerator.generateKey();
 	}
 
@@ -45,7 +45,7 @@ public final class CypherUtility {
 	 * Generate a random Initialization Vector (IV) for AES CBC mode
 	 */
 	public static IvParameterSpec generateIV() {
-		byte[] ivBytes = new byte[CypherConstraints.IV_SIZE];
+		byte[] ivBytes = new byte[RsConstraints.IV_SIZE];
 		SecureRandom random = new SecureRandom();
 		random.nextBytes(ivBytes);
 		return new IvParameterSpec(ivBytes);
@@ -55,7 +55,7 @@ public final class CypherUtility {
 	 * Encrypt AES key using RSA public key
 	 */
 	public static byte[] encryptAESKeyWithRSA(SecretKey aesKey, PublicKey publicKey) throws Exception {
-		Cipher cipher = Cipher.getInstance(CypherConstraints.RSA_TRANSFORMATION);
+		Cipher cipher = Cipher.getInstance(RsConstraints.RSA_TRANSFORMATION);
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		return cipher.doFinal(aesKey.getEncoded());
 	}
@@ -64,10 +64,10 @@ public final class CypherUtility {
 	 * Decrypt AES key using RSA private key
 	 */
 	public static SecretKey decryptAESKeyWithRSA(byte[] encryptedKey, PrivateKey privateKey) throws Exception {
-		Cipher cipher = Cipher.getInstance(CypherConstraints.RSA_TRANSFORMATION);
+		Cipher cipher = Cipher.getInstance(RsConstraints.RSA_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE, privateKey);
 		byte[] decryptedKey = cipher.doFinal(encryptedKey);
-		return new SecretKeySpec(decryptedKey, CypherConstraints.AES_ALGORITHM);
+		return new SecretKeySpec(decryptedKey, RsConstraints.AES_ALGORITHM);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public final class CypherUtility {
 	 */
 	public static CipherOutputStream createEncryptStream(OutputStream out, SecretKey aesKey, IvParameterSpec iv)
 			throws Exception {
-		Cipher cipher = Cipher.getInstance(CypherConstraints.AES_TRANSFORMATION);
+		Cipher cipher = Cipher.getInstance(RsConstraints.AES_TRANSFORMATION);
 		cipher.init(Cipher.ENCRYPT_MODE, aesKey, iv);
 		return new CipherOutputStream(out, cipher);
 	}
@@ -85,7 +85,7 @@ public final class CypherUtility {
 	 */
 	public static CipherInputStream createDecryptStream(InputStream in, SecretKey aesKey, IvParameterSpec iv)
 			throws Exception {
-		Cipher cipher = Cipher.getInstance(CypherConstraints.AES_TRANSFORMATION);
+		Cipher cipher = Cipher.getInstance(RsConstraints.AES_TRANSFORMATION);
 		cipher.init(Cipher.DECRYPT_MODE, aesKey, iv);
 		return new CipherInputStream(in, cipher);
 	}
@@ -97,12 +97,19 @@ public final class CypherUtility {
 	public static void writeEncryptionHeader(OutputStream out, IvParameterSpec iv, byte[] encryptedAESKey)
 			throws Exception {
 		DataOutputStream dos = new DataOutputStream(out);
-		
-		// Write IV
 		byte[] ivBytes = iv.getIV();
+
+		if (ivBytes.length <= 0 || ivBytes.length > 64) {
+			throw new IllegalArgumentException("Invalid IV length: " + ivBytes.length);
+		}
+		if (encryptedAESKey.length <= 0 || encryptedAESKey.length > 8192) {
+			throw new IllegalArgumentException("Invalid encrypted AES key size: " + encryptedAESKey.length);
+		}
+
+		// Write IV
 		dos.writeInt(ivBytes.length);
 		dos.write(ivBytes);
-		
+
 		// Write encrypted AES key
 		dos.writeInt(encryptedAESKey.length);
 		dos.write(encryptedAESKey);
@@ -111,21 +118,31 @@ public final class CypherUtility {
 
 	/**
 	 * Read encryption header from input stream
-	 * Returns array: [0] = IV bytes, [1] = encrypted AES key bytes
+	 * Format: [IV_SIZE:4][IV:16][ENCRYPTED_KEY_SIZE:4][ENCRYPTED_AES_KEY:variable]
 	 */
 	public static byte[][] readEncryptionHeader(InputStream in) throws Exception {
 		DataInputStream dis = new DataInputStream(in);
 		
-		// Read IV
 		int ivLength = dis.readInt();
+
+		if (ivLength <= 0 || ivLength > 64) {
+			throw new IllegalArgumentException("Invalid IV length: " + ivLength);
+		}
+
 		byte[] ivBytes = new byte[ivLength];
 		dis.readFully(ivBytes);
-		
-		// Read encrypted AES key
+
+		// Now read the encrypted AES key size
 		int keyLength = dis.readInt();
+
+		if (keyLength <= 0 || keyLength > 8192) {
+			throw new IllegalArgumentException("Invalid encrypted AES key size: " + keyLength);
+		}
+
+		// Read encrypted AES key
 		byte[] encryptedKey = new byte[keyLength];
 		dis.readFully(encryptedKey);
-		
+
 		return new byte[][] { ivBytes, encryptedKey };
 	}
 
@@ -153,9 +170,10 @@ public final class CypherUtility {
 
 	/**
 	 * Generate a new PKCS12 keystore with RSA key pair using keytool command
+	 * 
 	 * @param keystorePath Path where keystore will be saved
-	 * @param password Password for the keystore
-	 * @param alias Alias for the key entry
+	 * @param password     Password for the keystore
+	 * @param alias        Alias for the key entry
 	 * @return true if keystore was created successfully
 	 */
 	public static boolean generateKeyStore(java.nio.file.Path keystorePath, char[] password, String alias) {
@@ -164,18 +182,17 @@ public final class CypherUtility {
 			java.nio.file.Path keytoolPath = java.nio.file.Path.of(javaHome, "bin", "keytool");
 
 			java.util.List<String> command = java.util.List.of(
-				keytoolPath.toString(),
-				"-genkeypair",
-				"-alias", alias,
-				"-keyalg", "RSA",
-				"-keysize", "2048",
-				"-keystore", keystorePath.toAbsolutePath().toString(),
-				"-storetype", "PKCS12",
-				"-storepass", new String(password),
-				"-keypass", new String(password),
-				"-dname", "CN=" + alias + ", O=RSLock, C=US",
-				"-validity", "3650"
-			);
+					keytoolPath.toString(),
+					"-genkeypair",
+					"-alias", alias,
+					"-keyalg", "RSA",
+					"-keysize", "2048",
+					"-keystore", keystorePath.toAbsolutePath().toString(),
+					"-storetype", "PKCS12",
+					"-storepass", new String(password),
+					"-keypass", new String(password),
+					"-dname", "CN=" + alias + ", O=RSLock, C=US",
+					"-validity", "3650");
 
 			ProcessBuilder pb = new ProcessBuilder(command);
 			pb.redirectErrorStream(true);

@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.PublicKey;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,8 +18,6 @@ import com.rslock.common.*;
 
 public class RsfileEncryptor {
 
-	private static final int BUFFER_SIZE = 8192;
-
 	private static final String LOG_FILENAME = "rslock-encryptor.log";
 
 	private static final Logger LOG = Logger.getLogger(RsfileEncryptor.class.getName());
@@ -31,41 +28,36 @@ public class RsfileEncryptor {
 		LOG.info(() -> "=== RSLock File Encryptor ===\n");
 
 		// Parse command line arguments
-		RsCommandLineArgs cmdArgs = RsCommandLineArgs.parse(args);
+		RsLockConfig config = RsLockConfig.fromArgs(args);
 
-		List<Path> sourceFiles = cmdArgs.getSourceFiles();
-		Path destinationDir = cmdArgs.getDestinationDir();
-		Path keystorePath = cmdArgs.getKeystorePath();
+		if (!config.isKeystoreExists()) {
+			LOG.info(() -> "Keystore not found, generating new keystore...");
+			final Path finalKeystorePathForGen = config.getKeystorePath();
+
+			boolean generated = CypherUtility.generateKeyStore(
+					finalKeystorePathForGen,
+					RsConstraints.DEFAULT_KEYSTORE_PASSWORD,
+					config.getAlias());
+
+			if (generated) {
+				LOG.info(() -> "✓ Keystore generated successfully: " + finalKeystorePathForGen.toAbsolutePath());
+			} else {
+				LOG.severe(() -> "✗ Failed to generate keystore.");
+				throw new RuntimeException("Failed to generate keystore. Please create it manually using keytool.");
+			}
+		}
+
+		config.validate();
+
+		List<Path> sourceFiles = config.getSourceFiles();
+		Path destinationDir = config.getDestinationDir();
+		Path keystorePath = config.getKeystorePath();
 
 		// Default destination to source file's directory if not provided
 		if (destinationDir == null && !sourceFiles.isEmpty()) {
 			destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
 			final Path finalDestDir = destinationDir;
 			LOG.info(() -> "Using default destination: " + finalDestDir);
-		}
-
-		// Default keystore path if not provided
-		if (keystorePath == null) {
-			keystorePath = Path.of(CypherConstraints.DEFAULT_KEYSTORE_FILENAME);
-			final Path finalKeystorePath = keystorePath;
-			LOG.info(() -> "Using default keystore: " + finalKeystorePath.toAbsolutePath());
-		}
-
-		// Auto-generate keystore if it doesn't exist
-		if (!Files.exists(keystorePath)) {
-			LOG.info(() -> "Keystore not found, generating new keystore...");
-			final Path finalKeystorePathForGen = keystorePath;
-			char[] keystorePassword = getKeystorePassword();
-			boolean generated = CypherUtility.generateKeyStore(
-				finalKeystorePathForGen, 
-				keystorePassword, 
-				"rslock-key"
-			);
-			if (generated) {
-				LOG.info(() -> "✓ Keystore generated successfully: " + finalKeystorePathForGen.toAbsolutePath());
-			} else {
-				throw new RuntimeException("Failed to generate keystore. Please create it manually using keytool.");
-			}
 		}
 
 		final Path finalDestinationDir = destinationDir;
@@ -75,42 +67,30 @@ public class RsfileEncryptor {
 		for (Path src : sourceFiles) {
 			LOG.info(() -> "  - " + src.getFileName());
 		}
+
 		LOG.info(() -> "Destination: " + finalDestinationDir.toString());
 		LOG.info(() -> "Keystore: " + finalKeystorePath2.toString());
 
-		// Get keystore password securely
-		char[] keystorePassword = getKeystorePassword();
-
 		// Load keystore and keys
 		LOG.info(() -> "Loading keystore...");
-		KeyStore keystore = KeyStore.getInstance(CypherConstraints.KEYSTORE_TYPE);
+		KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
 		try (InputStream keystoreInput = Files.newInputStream(finalKeystorePath2)) {
-			keystore.load(keystoreInput, keystorePassword);
+			keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
 		}
 
 		LOG.info(() -> "✓ Keystore loaded");
-		String alias;
-		try {
-			List<String> aliasList = Collections.list(keystore.aliases());
-			LOG.info(() -> "Available aliases: " + aliasList);
-			alias = aliasList.get(0);
-		} catch (Exception e) {
-			LOG.warning("Could not list aliases: " + e.getMessage());
-			throw new RuntimeException("Failed to get keystore alias", e);
-		}
-		LOG.info(() -> "Using alias: " + alias);
 
-		PublicKey publicKey = CypherUtility.loadPublicKey(keystore, alias);
+		PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
 		LOG.info(() -> "✓ Public key loaded\n");
 
 		// Process each source file sequentially
 		int totalFiles = sourceFiles.size();
-		int processedFiles = 0;
+		int processedFiles = 0; // for logging only
 
 		for (Path sourceFile : sourceFiles) {
 			processedFiles++;
-			final int currentFile = processedFiles;
+			final int currentFile = processedFiles; // for logging only
 			LOG.info(() -> "[" + currentFile + "/" + totalFiles + "] Processing: " + sourceFile.getFileName());
 
 			try {
@@ -167,7 +147,7 @@ public class RsfileEncryptor {
 			// Write encrypted file data
 			try (CipherOutputStream cipherOutput = CypherUtility.createEncryptStream(fileOutput, aesKey, iv)) {
 				long bytesCopied = 0;
-				byte[] buffer = new byte[BUFFER_SIZE];
+				byte[] buffer = new byte[RsConstraints.DEFAULT_BUFFER_SIZE];
 				int bytesRead;
 				int lastProgressPercent = 0;
 
@@ -191,20 +171,6 @@ public class RsfileEncryptor {
 
 		LOG.info(() -> "     Output size: " + Utility.formatBytes(encryptedSize));
 		LOG.info(() -> "     Output file: " + outputFile.getFileName());
-	}
-
-	/**
-	 * Get keystore password securely from console or use default for demo
-	 */
-	private static char[] getKeystorePassword() {
-		// TODO: In production, use Console for secure password input:
-		// Console console = System.console();
-		// if (console != null) {
-		// return console.readPassword("Enter keystore password: ");
-		// }
-
-		// For demo purposes only
-		return "password".toCharArray();
 	}
 
 }

@@ -9,7 +9,7 @@ import javax.security.auth.x500.X500Principal;
 
 import sun.security.tools.keytool.CertAndKeyGen;
 
-public class GenerateTestKeystore {
+public class GenerateTestKeystore { 
     public static void main(String[] args) throws Exception {
         System.out.println("Generating test keystore...");
 
@@ -18,7 +18,7 @@ public class GenerateTestKeystore {
         keystore.load(null, null);
 
         // Generate RSA key pair
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        KeyPairGenerator keyGen = ("RSA");
         keyGen.initialize(2048);
         KeyPair keyPair = keyGen.generateKeyPair();
 
