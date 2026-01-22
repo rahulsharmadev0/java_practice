@@ -2,6 +2,8 @@ package com.rslock.common;
 
 import java.nio.file.Path;
 
+import com.rslock.common.ExecutionResult.FileResult;
+
 /**
  * Functional interface for file processing tasks.
  * Implementations define the actual processing logic (encrypt, decrypt, etc.)

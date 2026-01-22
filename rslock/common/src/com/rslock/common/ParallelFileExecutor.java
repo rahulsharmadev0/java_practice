@@ -9,6 +9,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.rslock.common.ExecutionResult.FileResult;
+
 /**
  * Generic utility for executing file processing tasks in parallel using a
  * thread pool.

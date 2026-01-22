@@ -15,6 +15,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
+import com.rslock.common.ExecutionResult.FileResult;
 
 /**
  * Main entry point for RSLock file encryption.
@@ -91,7 +92,7 @@ public class RsfileEncryptor {
 				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
 
 		// Print clean summary using common utility
-		ResultPrinter.printSummary(result, "Encryption", LOG);
+		Utilities.printSummary(result, "Encryption", LOG);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class RsfileEncryptor {
 		Path outputFile = destinationDir.resolve(outputFileName);
 
 		long fileSize = Files.size(sourceFile);
-		LOG.fine("     Source size: " + Utility.formatBytes(fileSize));
+		LOG.fine("     Source size: " + Utilities.formatBytes(fileSize));
 
 		// Generate unique AES key for this file
 		LOG.fine("     Generating AES key...");
@@ -150,7 +151,7 @@ public class RsfileEncryptor {
 
 		long encryptedSize = Files.size(outputFile);
 
-		LOG.fine("     Output size: " + Utility.formatBytes(encryptedSize));
+		LOG.fine("     Output size: " + Utilities.formatBytes(encryptedSize));
 		LOG.fine("     Output file: " + outputFile.getFileName());
 
 		return new FileResult(sourceFile.getFileName().toString(), outputFileName, encryptedSize);

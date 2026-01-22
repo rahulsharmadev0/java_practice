@@ -3,10 +3,29 @@ package com.rslock.common;
 import java.util.logging.Logger;
 
 /**
- * Utility for printing execution results in a consistent format.
- * Eliminates code duplication between encryptor and decryptor.
+ * General utility methods for the rslock application.
+ * Combines formatting and printing utilities.
  */
-public class ResultPrinter {
+public final class Utilities {
+
+    // Prevent instantiation
+    private Utilities() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
+    /**
+     * Format bytes to human-readable format
+     * 
+     * @param bytes Number of bytes to format
+     * @return Formatted string (e.g., "1.50 MB")
+     */
+    public static String formatBytes(long bytes) {
+        if (bytes <= 0)
+            return "0 B";
+        final String[] units = new String[] { "B", "KB", "MB", "GB" };
+        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+        return String.format("%.2f %s", bytes / Math.pow(1024, digitGroups), units[digitGroups]);
+    }
 
     /**
      * Prints a formatted summary of execution results
@@ -18,12 +37,12 @@ public class ResultPrinter {
     public static void printSummary(ExecutionResult result, String operation, Logger log) {
         log.info("=== " + operation + " Complete ===");
 
-        for (FileResult fileResult : result.getFileResults()) {
+        for (var fileResult : result.getFileResults()) {
             if (fileResult.isSuccess()) {
                 log.info(String.format("✓ %s → %s (%s)",
                         fileResult.getSourceFileName(),
                         fileResult.getOutputFileName(),
-                        Utility.formatBytes(fileResult.getOutputSize())));
+                        formatBytes(fileResult.getOutputSize())));
             } else {
                 log.warning(String.format("✗ %s (Error: %s)",
                         fileResult.getSourceFileName(),

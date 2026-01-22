@@ -15,6 +15,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
+import com.rslock.common.ExecutionResult.FileResult;
 
 /**
  * Main entry point for RSLock file decryption.
@@ -70,7 +71,7 @@ public class RsfileDecryptor {
                         privateKey));
 
         // Print clean summary using common utility
-        ResultPrinter.printSummary(result, "Decryption", LOG);
+        Utilities.printSummary(result, "Decryption", LOG);
     }
 
     /**
@@ -93,7 +94,7 @@ public class RsfileDecryptor {
         Path outputFile = destinationDir.resolve(outputFileName);
 
         long fileSize = Files.size(sourceFile);
-        LOG.fine("     Encrypted size: " + Utility.formatBytes(fileSize));
+        LOG.fine("     Encrypted size: " + Utilities.formatBytes(fileSize));
 
         // Decrypt the file
         try (InputStream fileInput = Files.newInputStream(sourceFile)) {
@@ -136,7 +137,7 @@ public class RsfileDecryptor {
 
         long decryptedSize = Files.size(outputFile);
 
-        LOG.fine("     Output size: " + Utility.formatBytes(decryptedSize));
+        LOG.fine("     Output size: " + Utilities.formatBytes(decryptedSize));
         LOG.fine("     Output file: " + outputFile.getFileName());
 
         return new FileResult(sourceFile.getFileName().toString(), outputFileName, decryptedSize);
