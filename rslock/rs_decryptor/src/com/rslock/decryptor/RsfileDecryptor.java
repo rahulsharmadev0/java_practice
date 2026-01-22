@@ -24,6 +24,7 @@ import com.rslock.common.*;
 public class RsfileDecryptor {
 
     private static final String LOG_FILENAME = "rslock-decryptor.log";
+    private static final int PROGRESS_LOG_INTERVAL = 10; // Log progress every 10%
 
     private static final Logger LOG = Logger.getLogger(RsfileDecryptor.class.getName());
 
@@ -38,7 +39,6 @@ public class RsfileDecryptor {
         config.validate();
 
         List<Path> sourceFiles = config.getSourceFiles();
-        Path keystorePath = config.getKeystorePath();
 
         LOG.info("Source files: " + sourceFiles.size());
         for (Path src : sourceFiles) {
@@ -51,7 +51,7 @@ public class RsfileDecryptor {
         LOG.info("Loading keystore...");
         KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
-        try (InputStream keystoreInput = Files.newInputStream(keystorePath)) {
+        try (InputStream keystoreInput = Files.newInputStream(config.getKeystorePath())) {
             keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
         }
 
@@ -63,17 +63,14 @@ public class RsfileDecryptor {
         LOG.info("✓ Private key loaded\n");
 
         // Use generic ParallelFileExecutor with decryption task
-        final PrivateKey finalPrivateKey = privateKey;
-        final RsLockConfig finalConfig = config;
-
         ExecutionResult result = ParallelFileExecutor.executeInParallel(
                 sourceFiles,
                 null, // destinationDir determined per file
-                (sourceFile, destDir) -> decryptFile(sourceFile, finalConfig.generateDestinationDir(sourceFile),
-                        finalPrivateKey));
+                (sourceFile, destDir) -> decryptFile(sourceFile, config.generateDestinationDir(sourceFile),
+                        privateKey));
 
-        // Print clean summary
-        printSummary(result);
+        // Print clean summary using common utility
+        ResultPrinter.printSummary(result, "Decryption", LOG);
     }
 
     /**
@@ -129,13 +126,11 @@ public class RsfileDecryptor {
 
                     // Show progress percentage (approximate since we don't know decrypted size)
                     int progressPercent = (int) ((bytesCopied * 100) / fileSize);
-                    if (progressPercent > lastProgressPercent && progressPercent % 10 == 0) {
+                    if (progressPercent > lastProgressPercent && progressPercent % PROGRESS_LOG_INTERVAL == 0) {
                         LOG.fine("     Progress: " + progressPercent + "%");
                         lastProgressPercent = progressPercent;
                     }
                 }
-
-                fileOutput.flush();
             }
         }
 
@@ -145,24 +140,5 @@ public class RsfileDecryptor {
         LOG.fine("     Output file: " + outputFile.getFileName());
 
         return new FileResult(sourceFile.getFileName().toString(), outputFileName, decryptedSize);
-    }
-
-    /**
-     * Prints a clean summary of decryption results
-     */
-    private static void printSummary(ExecutionResult result) {
-        LOG.info("=== Decryption Complete ===");
-
-        for (FileResult fileResult : result.getFileResults()) {
-            if (fileResult.isSuccess()) {
-                LOG.info("✓ " + fileResult.getSourceFileName() + " → " + fileResult.getOutputFileName() +
-                        " (" + Utility.formatBytes(fileResult.getOutputSize()) + ")");
-            } else {
-                LOG.warning("✗ " + fileResult.getSourceFileName() + " (Error: " + fileResult.getErrorMessage() + ")");
-            }
-        }
-
-        LOG.info("Total files decrypted: " + result.getSuccessCount() + "/" + result.getTotalFiles());
-        LOG.info("Thread pool size used: " + result.getThreadPoolSize());
     }
 }

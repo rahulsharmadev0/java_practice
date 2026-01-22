@@ -19,12 +19,14 @@ import java.util.logging.Logger;
 public class ParallelFileExecutor {
 
     private static final Logger LOG = Logger.getLogger(ParallelFileExecutor.class.getName());
+    private static final long TERMINATION_TIMEOUT_HOURS = 1;
 
     /**
      * Executes file processing tasks in parallel using a thread pool
      * 
      * @param sourceFiles    List of files to process
-     * @param destinationDir Destination directory for output files
+     * @param destinationDir Destination directory for output files (can be null if
+     *                       determined per-file)
      * @param task           FileTask implementation defining the processing logic
      * @return ExecutionResult containing details of all processed files
      * @throws RuntimeException if execution is interrupted
@@ -37,7 +39,7 @@ public class ParallelFileExecutor {
         int totalFiles = sourceFiles.size();
         int threadPoolSize = Math.min(Runtime.getRuntime().availableProcessors(), totalFiles);
 
-        LOG.info("Creating thread pool with " + threadPoolSize + " threads for parallel processing\n");
+        LOG.info(String.format("Creating thread pool with %d threads for parallel processing\n", threadPoolSize));
         ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
 
         ExecutionResult result = new ExecutionResult(totalFiles, threadPoolSize);
@@ -60,10 +62,10 @@ public class ParallelFileExecutor {
         // Shutdown executor and wait for completion
         executorService.shutdown();
 
-        LOG.info("Processing " + totalFiles + " file(s) in parallel...\n");
+        LOG.info(String.format("Processing %d file(s) in parallel...\n", totalFiles));
 
         try {
-            if (!executorService.awaitTermination(1, TimeUnit.HOURS)) {
+            if (!executorService.awaitTermination(TERMINATION_TIMEOUT_HOURS, TimeUnit.HOURS)) {
                 LOG.warning("Tasks did not complete within timeout, forcing shutdown...");
                 executorService.shutdownNow();
             }
@@ -75,6 +77,8 @@ public class ParallelFileExecutor {
                     result.addFileResult(fileResult);
                 } catch (Exception e) {
                     LOG.severe("Failed to get result: " + e.getMessage());
+                    // Add failed result to ensure all files are accounted for
+                    result.addFileResult(new FileResult("unknown", "Failed to retrieve result: " + e.getMessage()));
                 }
             }
 

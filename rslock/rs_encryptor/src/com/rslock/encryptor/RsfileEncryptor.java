@@ -24,6 +24,7 @@ import com.rslock.common.*;
 public class RsfileEncryptor {
 
 	private static final String LOG_FILENAME = "rslock-encryptor.log";
+	private static final int PROGRESS_LOG_INTERVAL = 10; // Log progress every 10%
 
 	private static final Logger LOG = Logger.getLogger(RsfileEncryptor.class.getName());
 
@@ -55,7 +56,6 @@ public class RsfileEncryptor {
 
 		List<Path> sourceFiles = config.getSourceFiles();
 		Path destinationDir = config.getDestinationDir();
-		Path keystorePath = config.getKeystorePath();
 
 		// Default destination to source file's directory if not provided
 		if (destinationDir == null && !sourceFiles.isEmpty()) {
@@ -68,14 +68,14 @@ public class RsfileEncryptor {
 			LOG.info("  - " + src.getFileName());
 		}
 
-		LOG.info("Destination: " + destinationDir.toString());
-		LOG.info("Keystore: " + keystorePath.toString());
+		LOG.info("Destination: " + destinationDir);
+		LOG.info("Keystore: " + config.getKeystorePath());
 
 		// Load keystore and keys
 		LOG.info("Loading keystore...");
 		KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
 
-		try (InputStream keystoreInput = Files.newInputStream(keystorePath)) {
+		try (InputStream keystoreInput = Files.newInputStream(config.getKeystorePath())) {
 			keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
 		}
 
@@ -85,16 +85,13 @@ public class RsfileEncryptor {
 		LOG.info("✓ Public key loaded\n");
 
 		// Use generic ParallelFileExecutor with encryption task
-		final Path finalDestinationDir = destinationDir;
-		final PublicKey finalPublicKey = publicKey;
-
 		ExecutionResult result = ParallelFileExecutor.executeInParallel(
 				sourceFiles,
-				finalDestinationDir,
-				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, finalPublicKey));
+				destinationDir,
+				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
 
-		// Print clean summary
-		printSummary(result);
+		// Print clean summary using common utility
+		ResultPrinter.printSummary(result, "Encryption", LOG);
 	}
 
 	/**
@@ -126,31 +123,28 @@ public class RsfileEncryptor {
 		// Encrypt the file
 		LOG.fine("     Encrypting file data...");
 		try (InputStream fileInput = Files.newInputStream(sourceFile);
-				OutputStream fileOutput = Files.newOutputStream(outputFile)) {
+				OutputStream fileOutput = Files.newOutputStream(outputFile);
+				CipherOutputStream cipherOutput = CypherUtility.createEncryptStream(fileOutput, aesKey, iv)) {
 
 			// Write header: IV and encrypted AES key
 			CypherUtility.writeEncryptionHeader(fileOutput, iv, encryptedAESKey);
 
 			// Write encrypted file data
-			try (CipherOutputStream cipherOutput = CypherUtility.createEncryptStream(fileOutput, aesKey, iv)) {
-				long bytesCopied = 0;
-				byte[] buffer = new byte[RsConstraints.DEFAULT_BUFFER_SIZE];
-				int bytesRead;
-				int lastProgressPercent = 0;
+			long bytesCopied = 0;
+			byte[] buffer = new byte[RsConstraints.DEFAULT_BUFFER_SIZE];
+			int bytesRead;
+			int lastProgressPercent = 0;
 
-				while ((bytesRead = fileInput.read(buffer)) != -1) {
-					cipherOutput.write(buffer, 0, bytesRead);
-					bytesCopied += bytesRead;
+			while ((bytesRead = fileInput.read(buffer)) != -1) {
+				cipherOutput.write(buffer, 0, bytesRead);
+				bytesCopied += bytesRead;
 
-					// Show progress percentage
-					int progressPercent = (int) ((bytesCopied * 100) / fileSize);
-					if (progressPercent > lastProgressPercent && progressPercent % 10 == 0) {
-						LOG.fine("     Progress: " + progressPercent + "%");
-						lastProgressPercent = progressPercent;
-					}
+				// Show progress percentage
+				int progressPercent = (int) ((bytesCopied * 100) / fileSize);
+				if (progressPercent > lastProgressPercent && progressPercent % PROGRESS_LOG_INTERVAL == 0) {
+					LOG.fine("     Progress: " + progressPercent + "%");
+					lastProgressPercent = progressPercent;
 				}
-
-				cipherOutput.flush();
 			}
 		}
 
@@ -160,24 +154,5 @@ public class RsfileEncryptor {
 		LOG.fine("     Output file: " + outputFile.getFileName());
 
 		return new FileResult(sourceFile.getFileName().toString(), outputFileName, encryptedSize);
-	}
-
-	/**
-	 * Prints a clean summary of encryption results
-	 */
-	private static void printSummary(ExecutionResult result) {
-		LOG.info("=== Encryption Complete ===");
-
-		for (FileResult fileResult : result.getFileResults()) {
-			if (fileResult.isSuccess()) {
-				LOG.info("✓ " + fileResult.getSourceFileName() + " → " + fileResult.getOutputFileName() +
-						" (" + Utility.formatBytes(fileResult.getOutputSize()) + ")");
-			} else {
-				LOG.warning("✗ " + fileResult.getSourceFileName() + " (Error: " + fileResult.getErrorMessage() + ")");
-			}
-		}
-
-		LOG.info("Total files encrypted: " + result.getSuccessCount() + "/" + result.getTotalFiles());
-		LOG.info("Thread pool size used: " + result.getThreadPoolSize());
 	}
 }

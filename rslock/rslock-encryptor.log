@@ -270,3 +270,25 @@
 [2026-01-23 02:30:08] [INFO] [RsfileEncryptor] ✓ test2.txt → test2.txt.rslocked (328.00 B)
 [2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Total files encrypted: 2/2
 [2026-01-23 02:30:08] [INFO] [RsfileEncryptor] Thread pool size used: 2
+[2026-01-23 02:43:45] [INFO] [RsLogger] Logging initialized
+[2026-01-23 02:43:45] [INFO] [RsLogger] Log file: /Users/rahulsharmadev/Documents/GitHub/Java Projects/java_practice/rslock/rslock-encryptor.log
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] === RSLock File Encryptor ===
+
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] Source files: 2
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor]   - test1.txt
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor]   - test2.txt
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] Destination: test_data/output
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] Loading keystore...
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 02:43:45] [INFO] [RsfileEncryptor] ✓ Public key loaded
+
+[2026-01-23 02:43:45] [INFO] [ParallelFileExecutor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 02:43:45] [INFO] [ParallelFileExecutor] Processing 2 file(s) in parallel...
+
+[2026-01-23 02:43:45] [INFO] [ResultPrinter] === Encryption Complete ===
+[2026-01-23 02:43:45] [INFO] [ResultPrinter] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 02:43:45] [INFO] [ResultPrinter] ✓ test2.txt → test2.txt.rslocked (328.00 B)
+[2026-01-23 02:43:45] [INFO] [ResultPrinter] Total files encryptioned: 2/2
+[2026-01-23 02:43:45] [INFO] [ResultPrinter] Thread pool size used: 2
