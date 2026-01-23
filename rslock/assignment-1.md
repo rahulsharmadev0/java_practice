@@ -81,6 +81,21 @@ k: keystore file path (optional)
 
 ```
 
+CURRENT BROKEN ISSUES:
+
+#### Case 1:
+
+- Source: test_data/fold1/test1.txt, test_data/fold1/fold2/test1.txt
+- Destination: NULL
+
+Result:
+- Encrypted files saved in the same folder as source files:
+  - test_data/fold1/test1.txt.rslocked
+  - test_data/fold1/test1.txt.rslocked
+
+
+----
+
 ## What's strategy:
 
 ### Encryption:

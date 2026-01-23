@@ -3,14 +3,13 @@ package com.rslock.common.executor;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import com.rslock.common.CypherUtility;
-import com.rslock.common.Utilities;
 import com.rslock.common.executor.ExecutionResult.FileResult;
 
 
@@ -30,19 +29,17 @@ public class ParallelFileExecutor {
     /**
      * Executes file processing tasks in parallel using a thread pool
      * 
-     * @param sourceFiles    List of files to process
-     * @param destinationDir Destination directory for output files (can be null if
-     *                       determined per-file)
-     * @param task           FileTask implementation defining the processing logic
+     * @param fileDestinationMapping Map of source files to their corresponding destination directories
+     *                               Pre-calculated mappings eliminate per-file overhead
+     * @param task                   FileTask implementation defining the processing logic
      * @return ExecutionResult containing details of all processed files
      * @throws RuntimeException if execution is interrupted
      */
     public static ExecutionResult executeInParallel(
-            List<Path> sourceFiles,
-            Path destinationDir,
+            Map<Path, Path> fileDestinationMapping,
             FileTask task) {
 
-        int totalFiles = sourceFiles.size();
+        int totalFiles = fileDestinationMapping.size();
         int threadPoolSize = Math.min(Runtime.getRuntime().availableProcessors(), totalFiles);
 
         LOG.info(String.format("Creating thread pool with %d threads for parallel processing\n", threadPoolSize));
@@ -52,11 +49,13 @@ public class ParallelFileExecutor {
         List<Future<FileResult>> futures = new ArrayList<>();
 
         // Submit tasks to thread pool
-        for (Path sourceFile : sourceFiles) {
+        for (Map.Entry<Path, Path> entry : fileDestinationMapping.entrySet()) {
+            Path sourceFile = entry.getKey();
+            Path destinationDir = entry.getValue();
+            
             Future<FileResult> future = executorService.submit(() -> {
                 try {
-                    Path finalDestinationDir = destinationDir != null ? destinationDir : sourceFile.toAbsolutePath().getParent();
-                    return task.execute(sourceFile, finalDestinationDir);
+                    return task.execute(sourceFile, destinationDir);
                 } catch (Exception e) {
                     LOG.severe("Error processing " + sourceFile.getFileName() + ": " + e.getMessage());
                     return new FileResult(sourceFile.getFileName().toString(), e.getMessage());

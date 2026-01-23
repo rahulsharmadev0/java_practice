@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.PublicKey;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,39 +59,38 @@ public class RsfileEncryptor {
 			config.validate();
 
 			List<Path> sourceFiles = config.getSourceFiles();
-			Path destinationDir = config.getDestinationDir();
 
-			// Default destination to source file's directory if not provided
-			if (destinationDir == null && !sourceFiles.isEmpty()) {
-				destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
-				LOG.info("Using default destination: " + destinationDir);
-			}
+		LOG.info("Source files: " + sourceFiles.size());
+		for (Path src : sourceFiles) {
+			LOG.info("  - " + src.getFileName());
+		}
 
-			LOG.info("Source files: " + sourceFiles.size());
-			for (Path src : sourceFiles) {
-				LOG.info("  - " + src.getFileName());
-			}
+		if (config.getDestinationDir() != null) {
+			LOG.info("Destination: " + config.getDestinationDir());
+		} else {
+			LOG.info("Destination: Same as source files (per-file)");
+		}
+		LOG.info("Keystore: " + config.getKeystorePath());
 
-			LOG.info("Destination: " + destinationDir);
-			LOG.info("Keystore: " + config.getKeystorePath());
+		// Load keystore and keys
+		LOG.info("Loading keystore...");
+		KeyStore keystore = CypherUtility.getKeystore(config.getKeystorePath());
 
-			// Load keystore and keys
-			LOG.info("Loading keystore...");
-			KeyStore keystore = CypherUtility.getKeystore(config.getKeystorePath());
+		LOG.info("✓ Keystore loaded");
 
-			LOG.info("✓ Keystore loaded");
+		PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
+		LOG.info("✓ Public key loaded\n");
 
-			PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
-			LOG.info("✓ Public key loaded\n");
+		// Pre-calculate all file destination mappings
+		Map<Path, Path> fileDestinationMapping = config.getFileDestinationMapping();
 
-			// Use generic ParallelFileExecutor with encryption task
-			ExecutionResult result = ParallelFileExecutor.executeInParallel(
-					sourceFiles,
-					destinationDir,
-					(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
+		// Use generic ParallelFileExecutor with encryption task
+		ExecutionResult result = ParallelFileExecutor.executeInParallel(
+				fileDestinationMapping,
+				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
 
-			// Print clean summary using common utility
-			Utilities.printSummary(result, "Encryption", LOG);
+		// Print clean summary using common utility
+		Utilities.printSummary(result, "Encryption", LOG);
 
 		} catch (Exception e) {
 			LOG.severe("Fatal error: " + e.getMessage());
@@ -110,23 +110,18 @@ public class RsfileEncryptor {
 		Path outputFile = destinationDir.resolve(outputFileName);
 
 		long fileSize = Files.size(sourceFile);
-		LOG.info("     Input file: " + outputFile.toString());
-		LOG.info("     Encrypted size: " + Utilities.formatBytes(fileSize));
 
-		// Generate unique AES key for this file
-		LOG.fine("     Generating AES key...");
+		LOG.fine("Input file: " + outputFile.toString());
+		LOG.fine("Encrypted size: " + Utilities.formatBytes(fileSize));
+
 		SecretKey aesKey = CypherUtility.generateAESKey();
 
-		// Generate unique IV for this file
-		LOG.fine("     Generating IV...");
 		IvParameterSpec iv = CypherUtility.generateIV();
 
-		// Encrypt the AES key with RSA public key
-		LOG.fine("     Encrypting AES key with RSA...");
 		byte[] encryptedAESKey = CypherUtility.encryptAESKeyWithRSA(aesKey, publicKey);
 
 		// Encrypt the file
-		LOG.fine("     Encrypting file data...");
+		LOG.fine("Encrypting file data...");
 		try (InputStream fileInput = Files.newInputStream(sourceFile);
 				OutputStream fileOutput = Files.newOutputStream(outputFile);
 				CipherOutputStream cipherOutput = CypherUtility.createEncryptStream(fileOutput, aesKey, iv)) {

@@ -3,32 +3,38 @@ package com.rslock.common;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class RsLockConfig {
 	private static final Logger logger = Logger.getLogger(RsLockConfig.class.getName());
-	private final List<Path> sourceFiles;
+	private final Map<Path, Path> fileMap;
 	private final Path destinationDir;
 	private final Path keystorePath;
 	private final String alias;
 
 	public RsLockConfig(List<Path> sourceFiles, Path destinationDir, Path keystorePath, String alias) {
-		this.sourceFiles = sourceFiles;
 		this.destinationDir = destinationDir;
 		this.keystorePath = keystorePath;
 		this.alias = alias;
+
+		fileMap = new LinkedHashMap<>();
+		for (Path sourceFile : sourceFiles) {
+			fileMap.put(sourceFile, generateDestinationDir(sourceFile));
+		}
 	}
 
 	// Ensure all required parameters are present
 	public void validate() {
 		logger.fine("Validating configuration...");
-		if (sourceFiles == null || sourceFiles.isEmpty()) {
+		if (fileMap.isEmpty()) {
 			throw new IllegalArgumentException("At least one source file must be specified.");
 		}
 
 		// Validate source files exist
-		for (Path source : sourceFiles) {
+		for (Path source : fileMap.keySet()) {
 			Path normalized = source.toAbsolutePath().normalize();
 			if (!Files.exists(normalized)) {
 				throw new IllegalArgumentException(
@@ -52,11 +58,11 @@ public class RsLockConfig {
 	}
 
 	public int getSourceFileCount() {
-		return sourceFiles.size();
+		return fileMap.size();
 	}
 
 	public List<Path> getSourceFiles() {
-		return sourceFiles;
+		return new ArrayList<>(fileMap.keySet());
 	}
 
 	public Path getDestinationDir() {
@@ -75,13 +81,33 @@ public class RsLockConfig {
 	// so, that if destinationDir is null, it returns the source file's parent
 	// directory
 	public Path generateDestinationDir(Path sourceFile) {
-		return destinationDir != null ? destinationDir : sourceFile.toAbsolutePath().getParent();
+		if (destinationDir != null) {
+			return destinationDir;
+		}
+
+		Path abs = sourceFile.toAbsolutePath().normalize();
+		Path parent = abs.getParent();
+
+		// Root-level file fallback
+		if (parent == null) {
+			return Path.of(".").toAbsolutePath().normalize();
+		}
+
+		return parent;
+	}
+
+	// Pre-calculate all source file to destination directory mappings
+	// This is computed once during initialization to avoid runtime overhead
+	// Case 1 (destination null): Each file maps to its own parent directory
+	// Case 2 (destination provided): All files map to the specified destination
+	public Map<Path, Path> getFileDestinationMapping() {
+		return fileMap;
 	}
 
 	@Override
 	public String toString() {
 		return "RsLockConfig{" + // Updated name here
-				"sourceFiles=" + sourceFiles +
+				"fileMap=" + fileMap +
 				", destinationDir=" + destinationDir +
 				", keystorePath=" + keystorePath +
 				", alias='" + alias + '\'' + // Added alias to toString

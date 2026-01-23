@@ -1,0 +1,47 @@
+[2026-01-23 13:58:01] [INFO] [main] [RsLogger] ==========Logging initialized==========
+[2026-01-23 13:58:01] [INFO] [main] [RsLogger] Log file: /home/iispl/Pictures/java_practice/rslock/rslock-decryptor-20260123-135801.log
+
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor] === RSLock File Decryptor ===
+
+[2026-01-23 13:58:01] [FINE] [main] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 13:58:01] [FINE] [main] [RsLockConfig] Validating configuration...
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor] Source files: 2
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor]   - test1.txt.rslocked
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor]   - test1.txt.rslocked
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor] Destination: Same as source files (per-file)
+[2026-01-23 13:58:01] [INFO] [main] [RsfileDecryptor] Keystore: rskeystore.p12
+[2026-01-23 13:58:02] [FINE] [main] [CypherUtility] Loading keystore from: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
+[2026-01-23 13:58:02] [FINE] [main] [CypherUtility] Keystore loaded successfully from: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
+[2026-01-23 13:58:02] [INFO] [main] [RsfileDecryptor] ✓ Keystore loaded
+[2026-01-23 13:58:02] [FINE] [main] [CypherUtility] Loading private key for alias: hello
+[2026-01-23 13:58:02] [INFO] [main] [RsfileDecryptor] ✓ Private key loaded
+
+[2026-01-23 13:58:03] [INFO] [main] [ParallelFileExecutor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 13:58:03] [INFO] [pool-1-thread-1] [RsfileDecryptor]      Input file: /home/iispl/Pictures/java_practice/rslock/test_data/fold1/test1.txt
+[2026-01-23 13:58:03] [INFO] [main] [ParallelFileExecutor] Processing 2 file(s) in parallel...
+
+[2026-01-23 13:58:03] [INFO] [pool-1-thread-2] [RsfileDecryptor]      Input file: /home/iispl/Pictures/java_practice/rslock/test_data/fold1/fold2/test1.txt
+[2026-01-23 13:58:03] [INFO] [pool-1-thread-1] [RsfileDecryptor]      Encrypted size: 3.34 KB
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [RsfileDecryptor]      Reading encryption header...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [CypherUtility]      Reading encryption header: IV_Length=16
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [CypherUtility]      Reading encryption header: Encrypted_Key_Length=256
+[2026-01-23 13:58:03] [INFO] [pool-1-thread-2] [RsfileDecryptor]      Encrypted size: 3.34 KB
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [RsfileDecryptor]      Reading encryption header...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [CypherUtility]      Reading encryption header: IV_Length=16
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [CypherUtility]      Reading encryption header: Encrypted_Key_Length=256
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [RsfileDecryptor]      Decrypting AES key with RSA...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [CypherUtility]      Decrypting AES key with RSA private key
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [RsfileDecryptor]      Decrypting AES key with RSA...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [CypherUtility]      Decrypting AES key with RSA private key
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [RsfileDecryptor]      Decrypting file data...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [RsfileDecryptor]      Output size: 3.06 KB
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-2] [RsfileDecryptor]      Output file: test1.txt
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [RsfileDecryptor]      Decrypting file data...
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [RsfileDecryptor]      Output size: 3.06 KB
+[2026-01-23 13:58:03] [FINE] [pool-1-thread-1] [RsfileDecryptor]      Output file: test1.txt
+[2026-01-23 13:58:03] [INFO] [main] [Utilities] === Decryption Complete ===
+[2026-01-23 13:58:03] [INFO] [main] [Utilities] ✓ test1.txt.rslocked → test1.txt (3.06 KB)
+[2026-01-23 13:58:03] [INFO] [main] [Utilities] ✓ test1.txt.rslocked → test1.txt (3.06 KB)
+[2026-01-23 13:58:03] [INFO] [main] [Utilities] Total files decryptioned: 2/2
+[2026-01-23 13:58:03] [INFO] [main] [Utilities] Thread pool size used: 2

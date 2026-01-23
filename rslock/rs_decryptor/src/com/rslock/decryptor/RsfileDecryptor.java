@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +49,11 @@ public class RsfileDecryptor {
             for (Path src : sourceFiles)
                 LOG.info("  - " + src.getFileName());
 
+            if (config.getDestinationDir() != null) {
+                LOG.info("Destination: " + config.getDestinationDir());
+            } else {
+                LOG.info("Destination: Same as source files (per-file)");
+            }
             LOG.info("Keystore: " + config.getKeystorePath());
 
             KeyStore keystore = CypherUtility.getKeystore(config.getKeystorePath());
@@ -58,13 +64,13 @@ public class RsfileDecryptor {
 
             LOG.info("✓ Private key loaded\n");
 
+            // Pre-calculate all file destination mappings
+            Map<Path, Path> fileDestinationMapping = config.getFileDestinationMapping();
+
             // Use generic ParallelFileExecutor with decryption task
             ExecutionResult result = ParallelFileExecutor.executeInParallel(
-                    sourceFiles,
-                    null, // destinationDir determined per file
-                    (sourceFile, destDir) -> RsfileDecryptor.decryptFile(sourceFile,
-                            config.generateDestinationDir(sourceFile),
-                            privateKey));
+                    fileDestinationMapping,
+                    (sourceFile, destDir) -> RsfileDecryptor.decryptFile(sourceFile, destDir, privateKey));
 
             // Print clean summary
             Utilities.printSummary(result, "Decryption", LOG);
