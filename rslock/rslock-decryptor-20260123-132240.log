@@ -1,0 +1,8 @@
+[2026-01-23 13:22:40] [INFO] [main] [RsLogger] ==========Logging initialized==========
+[2026-01-23 13:22:40] [INFO] [main] [RsLogger] Log file: /home/iispl/Pictures/java_practice/rslock/rslock-decryptor-20260123-132240.log
+
+[2026-01-23 13:22:40] [INFO] [main] [RsfileDecryptor] === RSLock File Decryptor ===
+
+[2026-01-23 13:22:41] [FINE] [main] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 13:22:41] [FINE] [main] [RsLockConfig] Validating configuration...
+[2026-01-23 13:22:41] [SEVERE] [main] [RsfileDecryptor] Fatal error: Source file does not exist: /home/iispl/Pictures/java_practice/rslock/test_data/fold1/fold2/test1.txt.rslocked

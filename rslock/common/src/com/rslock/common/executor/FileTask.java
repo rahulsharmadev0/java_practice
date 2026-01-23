@@ -1,8 +1,8 @@
-package com.rslock.common;
+package com.rslock.common.executor;
 
 import java.nio.file.Path;
 
-import com.rslock.common.ExecutionResult.FileResult;
+import com.rslock.common.executor.ExecutionResult.FileResult;
 
 /**
  * Functional interface for file processing tasks.

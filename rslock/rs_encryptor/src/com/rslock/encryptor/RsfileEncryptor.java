@@ -15,7 +15,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
-import com.rslock.common.ExecutionResult.FileResult;
+import com.rslock.common.executor.ExecutionResult;
+import com.rslock.common.executor.ParallelFileExecutor;
+import com.rslock.common.executor.ExecutionResult.FileResult;
 
 /**
  * Main entry point for RSLock file encryption.
@@ -24,75 +26,76 @@ import com.rslock.common.ExecutionResult.FileResult;
  */
 public class RsfileEncryptor {
 
-	private static final String LOG_FILENAME = "rslock-encryptor.log";
+	private static final String LOG_FILENAME = "rslock-encryptor";
 	private static final int PROGRESS_LOG_INTERVAL = 10; // Log progress every 10%
 
 	private static final Logger LOG = Logger.getLogger(RsfileEncryptor.class.getName());
 
-	public static void main(String[] args) throws Exception {
-		RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
-
+	public static void main(String[] args) {
+		RsLogger.init(LOG_FILENAME, Level.INFO, Level.ALL);
 		LOG.info("=== RSLock File Encryptor ===\n");
+		try {
 
-		// Parse command line arguments
-		RsLockConfig config = RsLockConfig.fromArgs(args);
+			// Parse command line arguments
+			RsLockConfig config = RsLockConfig.fromArgs(args);
 
-		if (!config.isKeystoreExists()) {
-			LOG.info("Keystore not found, generating new keystore...");
+			if (!config.isKeystoreExists()) {
+				LOG.info("Keystore not found, generating new keystore...");
 
-			boolean generated = CypherUtility.generateKeyStore(
-					config.getKeystorePath(),
-					RsConstraints.DEFAULT_KEYSTORE_PASSWORD,
-					config.getAlias());
+				boolean generated = CypherUtility.generateKeyStore(
+						config.getKeystorePath(),
+						RsConstraints.DEFAULT_KEYSTORE_PASSWORD,
+						config.getAlias());
 
-			if (generated) {
-				LOG.info("✓ Keystore generated successfully: " + config.getKeystorePath().toAbsolutePath());
-			} else {
-				LOG.severe("✗ Failed to generate keystore.");
-				throw new RuntimeException("Failed to generate keystore. Please create it manually using keytool.");
+				if (generated) {
+					LOG.info("✓ Keystore generated successfully: " + config.getKeystorePath().toAbsolutePath());
+				} else {
+					LOG.severe("✗ Failed to generate keystore.");
+					throw new RuntimeException("Failed to generate keystore. Please create it manually using keytool.");
+				}
 			}
+
+			config.validate();
+
+			List<Path> sourceFiles = config.getSourceFiles();
+			Path destinationDir = config.getDestinationDir();
+
+			// Default destination to source file's directory if not provided
+			if (destinationDir == null && !sourceFiles.isEmpty()) {
+				destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
+				LOG.info("Using default destination: " + destinationDir);
+			}
+
+			LOG.info("Source files: " + sourceFiles.size());
+			for (Path src : sourceFiles) {
+				LOG.info("  - " + src.getFileName());
+			}
+
+			LOG.info("Destination: " + destinationDir);
+			LOG.info("Keystore: " + config.getKeystorePath());
+
+			// Load keystore and keys
+			LOG.info("Loading keystore...");
+			KeyStore keystore = CypherUtility.getKeystore(config.getKeystorePath());
+
+			LOG.info("✓ Keystore loaded");
+
+			PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
+			LOG.info("✓ Public key loaded\n");
+
+			// Use generic ParallelFileExecutor with encryption task
+			ExecutionResult result = ParallelFileExecutor.executeInParallel(
+					sourceFiles,
+					destinationDir,
+					(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
+
+			// Print clean summary using common utility
+			Utilities.printSummary(result, "Encryption", LOG);
+
+		} catch (Exception e) {
+			LOG.severe("Fatal error: " + e.getMessage());
+			throw new RuntimeException(e);
 		}
-
-		config.validate();
-
-		List<Path> sourceFiles = config.getSourceFiles();
-		Path destinationDir = config.getDestinationDir();
-
-		// Default destination to source file's directory if not provided
-		if (destinationDir == null && !sourceFiles.isEmpty()) {
-			destinationDir = sourceFiles.get(0).toAbsolutePath().getParent();
-			LOG.info("Using default destination: " + destinationDir);
-		}
-
-		LOG.info("Source files: " + sourceFiles.size());
-		for (Path src : sourceFiles) {
-			LOG.info("  - " + src.getFileName());
-		}
-
-		LOG.info("Destination: " + destinationDir);
-		LOG.info("Keystore: " + config.getKeystorePath());
-
-		// Load keystore and keys
-		LOG.info("Loading keystore...");
-		KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
-
-		try (InputStream keystoreInput = Files.newInputStream(config.getKeystorePath())) {
-			keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
-		}
-
-		LOG.info("✓ Keystore loaded");
-
-		PublicKey publicKey = CypherUtility.loadPublicKey(keystore, config.getAlias());
-		LOG.info("✓ Public key loaded\n");
-
-		// Use generic ParallelFileExecutor with encryption task
-		ExecutionResult result = ParallelFileExecutor.executeInParallel(
-				sourceFiles,
-				destinationDir,
-				(sourceFile, destDir) -> encryptFile(sourceFile, destDir, publicKey));
-
-		// Print clean summary using common utility
-		Utilities.printSummary(result, "Encryption", LOG);
 	}
 
 	/**
@@ -107,7 +110,8 @@ public class RsfileEncryptor {
 		Path outputFile = destinationDir.resolve(outputFileName);
 
 		long fileSize = Files.size(sourceFile);
-		LOG.fine("     Source size: " + Utilities.formatBytes(fileSize));
+		LOG.info("     Input file: " + outputFile.toString());
+		LOG.info("     Encrypted size: " + Utilities.formatBytes(fileSize));
 
 		// Generate unique AES key for this file
 		LOG.fine("     Generating AES key...");

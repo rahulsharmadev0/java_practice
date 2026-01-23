@@ -158,3 +158,11 @@ Sure ✅ here’s _why_ (short and clear):
 
     - `KeyManagerFactory` → sends **your certificate** (your identity)
     - `TrustManagerFactory` → verifies **other side certificate** (who you trust)
+
+
+-----
+
+
+
+
+

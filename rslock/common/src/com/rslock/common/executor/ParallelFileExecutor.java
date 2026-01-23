@@ -1,4 +1,4 @@
-package com.rslock.common;
+package com.rslock.common.executor;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -9,7 +9,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import com.rslock.common.ExecutionResult.FileResult;
+import com.rslock.common.CypherUtility;
+import com.rslock.common.Utilities;
+import com.rslock.common.executor.ExecutionResult.FileResult;
+
+
 
 /**
  * Generic utility for executing file processing tasks in parallel using a
@@ -51,7 +55,8 @@ public class ParallelFileExecutor {
         for (Path sourceFile : sourceFiles) {
             Future<FileResult> future = executorService.submit(() -> {
                 try {
-                    return task.execute(sourceFile, destinationDir);
+                    Path finalDestinationDir = destinationDir != null ? destinationDir : sourceFile.toAbsolutePath().getParent();
+                    return task.execute(sourceFile, finalDestinationDir);
                 } catch (Exception e) {
                     LOG.severe("Error processing " + sourceFile.getFileName() + ": " + e.getMessage());
                     return new FileResult(sourceFile.getFileName().toString(), e.getMessage());
@@ -61,12 +66,13 @@ public class ParallelFileExecutor {
             futures.add(future);
         }
 
-        // Shutdown executor and wait for completion
+        // wait for completion & Shutdown executor.
         executorService.shutdown();
 
         LOG.info(String.format("Processing %d file(s) in parallel...\n", totalFiles));
 
         try {
+            // Timeout to avoid indefinite blocking
             if (!executorService.awaitTermination(TERMINATION_TIMEOUT_HOURS, TimeUnit.HOURS)) {
                 LOG.warning("Tasks did not complete within timeout, forcing shutdown...");
                 executorService.shutdownNow();
@@ -75,20 +81,20 @@ public class ParallelFileExecutor {
             // Collect results from all tasks
             for (Future<FileResult> future : futures) {
                 try {
-                    FileResult fileResult = future.get();
-                    result.addFileResult(fileResult);
+                    result.addFileResult(future.get());
                 } catch (Exception e) {
-                    LOG.severe("Failed to get result: " + e.getMessage());
-                    // Add failed result to ensure all files are accounted for
-                    result.addFileResult(new FileResult("unknown", "Failed to retrieve result: " + e.getMessage()));
+                    String errorMessage = "Failed to retrieve result: " + e.getMessage();
+                    LOG.severe(errorMessage);
+                    result.addFileResult(new FileResult("unknown", errorMessage));
                 }
             }
 
         } catch (InterruptedException e) {
-            LOG.severe("Execution was interrupted");
+            String errorMessage = "Execution was interrupted";
+            LOG.severe(errorMessage);
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Execution was interrupted", e);
+            throw new RuntimeException(errorMessage, e);
         }
 
         return result;

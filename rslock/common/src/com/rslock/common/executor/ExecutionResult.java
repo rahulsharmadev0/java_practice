@@ -1,4 +1,4 @@
-package com.rslock.common;
+package com.rslock.common.executor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +84,18 @@ public class ExecutionResult {
 
         public String getErrorMessage() {
             return errorMessage;
+        }
+
+        @Override
+        public String toString() {
+
+            return "FileResult{" +
+                    "sourceFileName='" + sourceFileName + '\'' +
+                    ", outputFileName='" + outputFileName + '\'' +
+                    ", outputSize=" + outputSize +
+                    ", success=" + success +
+                    ", errorMessage='" + errorMessage + '\'' +
+                    '}';
         }
     }
 

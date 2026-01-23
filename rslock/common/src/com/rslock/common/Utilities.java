@@ -2,6 +2,8 @@ package com.rslock.common;
 
 import java.util.logging.Logger;
 
+import com.rslock.common.executor.ExecutionResult;
+
 /**
  * General utility methods for the rslock application.
  * Combines formatting and printing utilities.
@@ -39,7 +41,8 @@ public final class Utilities {
 
         for (var fileResult : result.getFileResults()) {
             if (fileResult.isSuccess()) {
-                log.info(String.format("✓ %s → %s (%s)",
+                log.info(
+                    String.format("✓ %s → %s (%s)",
                         fileResult.getSourceFileName(),
                         fileResult.getOutputFileName(),
                         formatBytes(fileResult.getOutputSize())));

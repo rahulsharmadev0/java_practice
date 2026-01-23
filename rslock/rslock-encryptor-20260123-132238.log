@@ -1,0 +1,55 @@
+[2026-01-23 13:22:38] [INFO] [main] [RsLogger] ==========Logging initialized==========
+[2026-01-23 13:22:38] [INFO] [main] [RsLogger] Log file: /home/iispl/Pictures/java_practice/rslock/rslock-encryptor-20260123-132238.log
+
+[2026-01-23 13:22:38] [INFO] [main] [RsfileEncryptor] === RSLock File Encryptor ===
+
+[2026-01-23 13:22:38] [FINE] [main] [RsLockConfig] Parsing command line arguments...
+[2026-01-23 13:22:38] [FINE] [main] [RsLockConfig] Validating configuration...
+[2026-01-23 13:22:38] [INFO] [main] [RsfileEncryptor] Using default destination: /home/iispl/Pictures/java_practice/rslock/test_data/fold1
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] Source files: 2
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor]   - test1.txt
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor]   - test1.txt
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] Destination: /home/iispl/Pictures/java_practice/rslock/test_data/fold1
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] Keystore: rskeystore.p12
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] Loading keystore...
+[2026-01-23 13:22:39] [FINE] [main] [CypherUtility] Loading keystore from: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
+[2026-01-23 13:22:39] [FINE] [main] [CypherUtility] Keystore loaded successfully from: /home/iispl/Pictures/java_practice/rslock/rskeystore.p12
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] ✓ Keystore loaded
+[2026-01-23 13:22:39] [FINE] [main] [CypherUtility] Loading public key for alias: hello
+[2026-01-23 13:22:39] [INFO] [main] [RsfileEncryptor] ✓ Public key loaded
+
+[2026-01-23 13:22:39] [INFO] [main] [ParallelFileExecutor] Creating thread pool with 2 threads for parallel processing
+
+[2026-01-23 13:22:39] [INFO] [pool-1-thread-1] [RsfileEncryptor]      Input file: /home/iispl/Pictures/java_practice/rslock/test_data/fold1/test1.txt.rslocked
+[2026-01-23 13:22:39] [INFO] [pool-1-thread-2] [RsfileEncryptor]      Input file: /home/iispl/Pictures/java_practice/rslock/test_data/fold1/test1.txt.rslocked
+[2026-01-23 13:22:39] [INFO] [main] [ParallelFileExecutor] Processing 2 file(s) in parallel...
+
+[2026-01-23 13:22:39] [INFO] [pool-1-thread-2] [RsfileEncryptor]      Encrypted size: 3.06 KB
+[2026-01-23 13:22:39] [INFO] [pool-1-thread-1] [RsfileEncryptor]      Encrypted size: 3.06 KB
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [CypherUtility]      Generating new AES key (Size: 256 bits)
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Generating AES key...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [CypherUtility]      Generating new AES key (Size: 256 bits)
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Generating IV...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [CypherUtility]      Generating new Initialization Vector (IV)
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [CypherUtility]      Encrypting AES key with RSA public key
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Generating IV...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [CypherUtility]      Generating new Initialization Vector (IV)
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Encrypting AES key with RSA...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [CypherUtility]      Encrypting AES key with RSA public key
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [CypherUtility]      Writing encryption header: IV_Length=16, Encrypted_Key_Length=256
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Progress: 100%
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Encrypting file data...
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [CypherUtility]      Writing encryption header: IV_Length=16, Encrypted_Key_Length=256
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-2] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Progress: 100%
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Output size: 3.34 KB
+[2026-01-23 13:22:39] [FINE] [pool-1-thread-1] [RsfileEncryptor]      Output file: test1.txt.rslocked
+[2026-01-23 13:22:39] [INFO] [main] [Utilities] === Encryption Complete ===
+[2026-01-23 13:22:39] [INFO] [main] [Utilities] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 13:22:39] [INFO] [main] [Utilities] ✓ test1.txt → test1.txt.rslocked (3.34 KB)
+[2026-01-23 13:22:39] [INFO] [main] [Utilities] Total files encryptioned: 2/2
+[2026-01-23 13:22:39] [INFO] [main] [Utilities] Thread pool size used: 2

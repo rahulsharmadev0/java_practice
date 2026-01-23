@@ -29,7 +29,7 @@ public final class RsConstraints {
 	// Buffer size for file streams operations
 	public static final int DEFAULT_BUFFER_SIZE = 8192;
 
-	// Encryption Constraints
-	public static final int IV_SIZE = 16; // bytes (128 bits for AES)
+	// Initialization Vector 16 byte (128 bits) size for AES
+	public static final int IV_SIZE = 16; 
 
 }

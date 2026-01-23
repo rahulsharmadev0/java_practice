@@ -15,7 +15,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import com.rslock.common.*;
-import com.rslock.common.ExecutionResult.FileResult;
+import com.rslock.common.executor.ExecutionResult;
+import com.rslock.common.executor.ParallelFileExecutor;
+import com.rslock.common.executor.ExecutionResult.FileResult;
 
 /**
  * Main entry point for RSLock file decryption.
@@ -29,49 +31,48 @@ public class RsfileDecryptor {
 
     private static final Logger LOG = Logger.getLogger(RsfileDecryptor.class.getName());
 
-    public static void main(String[] args) throws Exception {
-        RsLogger.init(LOG_FILENAME, Level.INFO, Level.FINE);
-
+    public static void main(String[] args) {
+        RsLogger.init(LOG_FILENAME, Level.INFO, Level.ALL);
         LOG.info("=== RSLock File Decryptor ===\n");
+        try {
+            // Get Configuration from command line arguments
+            RsLockConfig config = RsLockConfig.fromArgs(args);
 
-        // Parse command line arguments
-        RsLockConfig config = RsLockConfig.fromArgs(args);
+            // Validate configuration e
+            config.validate();
 
-        config.validate();
+            List<Path> sourceFiles = config.getSourceFiles();
 
-        List<Path> sourceFiles = config.getSourceFiles();
+            LOG.info("Source files: " + sourceFiles.size());
 
-        LOG.info("Source files: " + sourceFiles.size());
-        for (Path src : sourceFiles) {
-            LOG.info("  - " + src.getFileName());
+            for (Path src : sourceFiles)
+                LOG.info("  - " + src.getFileName());
+
+            LOG.info("Keystore: " + config.getKeystorePath());
+
+            KeyStore keystore = CypherUtility.getKeystore(config.getKeystorePath());
+
+            LOG.info("✓ Keystore loaded");
+
+            PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, config.getAlias());
+
+            LOG.info("✓ Private key loaded\n");
+
+            // Use generic ParallelFileExecutor with decryption task
+            ExecutionResult result = ParallelFileExecutor.executeInParallel(
+                    sourceFiles,
+                    null, // destinationDir determined per file
+                    (sourceFile, destDir) -> RsfileDecryptor.decryptFile(sourceFile,
+                            config.generateDestinationDir(sourceFile),
+                            privateKey));
+
+            // Print clean summary
+            Utilities.printSummary(result, "Decryption", LOG);
+
+        } catch (Exception e) {
+            LOG.severe("Fatal error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
-
-        LOG.info("Keystore: " + config.getKeystorePath());
-
-        // Load keystore and keys
-        LOG.info("Loading keystore...");
-        KeyStore keystore = KeyStore.getInstance(RsConstraints.KEYSTORE_TYPE);
-
-        try (InputStream keystoreInput = Files.newInputStream(config.getKeystorePath())) {
-            keystore.load(keystoreInput, RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
-        }
-
-        LOG.info("✓ Keystore loaded");
-
-        PrivateKey privateKey = CypherUtility.loadPrivateKey(keystore, config.getAlias(),
-                RsConstraints.DEFAULT_KEYSTORE_PASSWORD);
-
-        LOG.info("✓ Private key loaded\n");
-
-        // Use generic ParallelFileExecutor with decryption task
-        ExecutionResult result = ParallelFileExecutor.executeInParallel(
-                sourceFiles,
-                null, // destinationDir determined per file
-                (sourceFile, destDir) -> decryptFile(sourceFile, config.generateDestinationDir(sourceFile),
-                        privateKey));
-
-        // Print clean summary using common utility
-        Utilities.printSummary(result, "Decryption", LOG);
     }
 
     /**
@@ -94,12 +95,15 @@ public class RsfileDecryptor {
         Path outputFile = destinationDir.resolve(outputFileName);
 
         long fileSize = Files.size(sourceFile);
-        LOG.fine("     Encrypted size: " + Utilities.formatBytes(fileSize));
+
+
+        LOG.info("     Input file: " + outputFile.toString());
+        LOG.info("     Encrypted size: " + Utilities.formatBytes(fileSize));
 
         // Decrypt the file
         try (InputStream fileInput = Files.newInputStream(sourceFile)) {
 
-            // Read header: IV and encrypted AES key
+            // Read header: IV & encrypted AES key
             LOG.fine("     Reading encryption header...");
             byte[][] header = CypherUtility.readEncryptionHeader(fileInput);
             byte[] ivBytes = header[0];
